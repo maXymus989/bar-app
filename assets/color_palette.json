@@ -1,0 +1,9 @@
+{
+    "main": {
+        "background_modalButtons": "#294122",
+        "buttons_modalBackground": "#FFEDD2",
+        "darkText": "#383838",
+        "lightText_listItemsBackground": "#FFB8A4",
+        "notButtons": "#E93C00"
+    }
+}
