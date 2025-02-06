@@ -2,6 +2,7 @@ import { Text, View, StyleSheet } from "react-native";
 import { createContext } from "react";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
+import { Button } from "@rneui/base";
 
 const ColorPalette = require("../assets/color_palette.json");
 const ColorThemeContext = createContext(ColorPalette);
@@ -9,6 +10,7 @@ const ColorThemeContext = createContext(ColorPalette);
 const Index = () => {
   const [loaded, error] = useFonts({
     "KyivTypeTitling-Bold": require("../assets/fonts/KyivTypeTitling-Bold.ttf"),
+    "KyivTypeSerif-Heavy": require("../assets/fonts/KyivTypeSerif-Heavy.ttf"),
   });
 
   if (!loaded) {
@@ -37,6 +39,32 @@ const Index = () => {
       >
         Вітаємо в закладі, оберіть Вашу роль
       </Text>
+      <View style={styles.buttonsContainer}>
+        <Button
+          title={"Бармен"}
+          buttonStyle={{
+            backgroundColor: ColorPalette.main.buttons_modalBackground,
+          }}
+          titleStyle={{
+            color: ColorPalette.main.darkText,
+            fontFamily: "KyivTypeSerif-Heavy",
+            fontSize: 30,
+          }}
+          containerStyle={styles.buttonContainer}
+        />
+        <Button
+          title={"Клієнт"}
+          buttonStyle={{
+            backgroundColor: ColorPalette.main.buttons_modalBackground,
+          }}
+          titleStyle={{
+            color: ColorPalette.main.darkText,
+            fontFamily: "KyivTypeSerif-Heavy",
+            fontSize: 30,
+          }}
+          containerStyle={styles.buttonContainer}
+        />
+      </View>
     </View>
   );
 };
@@ -49,7 +77,24 @@ const styles = StyleSheet.create({
   headerText: {
     textAlign: "center",
     fontSize: 36,
-    marginTop: "30%",
+    marginTop: "40%",
+    width: "90%",
+  },
+  buttonsContainer: {
+    width: "80%",
+    marginTop: "40%",
+  },
+  buttonContainer: {
+    marginVertical: "2%",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowOpacity: 0.58,
+    shadowRadius: 16.0,
+    elevation: 24,
   },
 });
 
