@@ -3,6 +3,7 @@ import { createContext } from "react";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
 import { Button } from "@rneui/base";
+import { useRouter } from "expo-router";
 
 const ColorPalette = require("../assets/color_palette.json");
 const ColorThemeContext = createContext(ColorPalette);
@@ -12,6 +13,8 @@ const Index = () => {
     "KyivTypeTitling-Bold": require("../assets/fonts/KyivTypeTitling-Bold.ttf"),
     "KyivTypeSerif-Heavy": require("../assets/fonts/KyivTypeSerif-Heavy.ttf"),
   });
+
+  const router = useRouter();
 
   if (!loaded) {
     <AppLoading />;
@@ -51,6 +54,9 @@ const Index = () => {
             fontSize: 30,
           }}
           containerStyle={styles.buttonContainer}
+          onPress={() => {
+            router.push("/(barman-tabs)/orders");
+          }}
         />
         <Button
           title={"Клієнт"}

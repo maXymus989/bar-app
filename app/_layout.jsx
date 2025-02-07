@@ -11,6 +11,7 @@ export default function RootLayout() {
           statusBarBackgroundColor: "black",
         }}
       />
+      <Stack.Screen name="(barman-tabs)" options={{ headerShown: false }} />
     </Stack>
   );
 }
