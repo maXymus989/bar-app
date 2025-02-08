@@ -1,8 +1,8 @@
+import { useContext } from "react";
 import { Tabs } from "expo-router";
 import { ColorThemeContext } from "../index";
-import { useContext } from "react";
 
-export default function TabLayout() {
+const TabLayout = () => {
   const ColorPalette = useContext(ColorThemeContext);
   return (
     <Tabs
@@ -47,4 +47,6 @@ export default function TabLayout() {
       />
     </Tabs>
   );
-}
+};
+
+export default TabLayout;

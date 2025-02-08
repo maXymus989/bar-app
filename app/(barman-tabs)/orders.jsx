@@ -1,7 +1,6 @@
-import { ScrollView, StyleSheet } from "react-native";
-import { View } from "react-native";
-import { ColorThemeContext } from "../index";
 import { useContext } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { ColorThemeContext } from "../index";
 import Order from "../../Components/Order";
 
 const Orders = () => {

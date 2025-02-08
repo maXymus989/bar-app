@@ -1,7 +1,7 @@
-import { Pressable, StyleSheet, View } from "react-native";
-import { ColorThemeContext } from "../app/index";
 import { useContext } from "react";
+import { StyleSheet, View } from "react-native";
 import { Text } from "@rneui/base";
+import { ColorThemeContext } from "../app/index";
 
 const Order = (props) => {
   const { orderName, price, clientName, date, time } = props;
