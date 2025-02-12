@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { FAB } from "@rneui/base";
 import { ColorThemeContext } from "../index";
+import MenuItemDialog from "../../Components/MenuItemDialog";
 
 const Menu = () => {
   const ColorPalette = useContext(ColorThemeContext);
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <View
@@ -14,12 +16,18 @@ const Menu = () => {
       }}
     >
       <ScrollView contentContainerStyle={styles.window}></ScrollView>
+
       <FAB
         visible={true}
         icon={{ name: "add" }}
         color={ColorPalette.main.buttons_modalBackground}
         style={styles.FABStyle}
+        onPress={() => {
+          setModalVisible(true);
+        }}
       />
+
+      <MenuItemDialog isVisible={modalVisible} setIsVisible={setModalVisible} />
     </View>
   );
 };
