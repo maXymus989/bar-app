@@ -1,0 +1,78 @@
+{
+    "menu": [
+        {
+            "name": "Хрещений батько",
+            "image": "",
+            "ingredients": [
+                {
+                    "name": "шотландський віскі",
+                    "quantity": "35",
+                    "unit": "ml",
+                    "check_for_availablity": true
+                },
+                {
+                    "name": "амарето",
+                    "quantity": "35",
+                    "unit": "ml",
+                    "check_for_availablity": true
+                },
+                {
+                    "name": "лід",
+                    "quantity": "1",
+                    "unit": "шт",
+                    "check_for_availablity": false
+                }
+            ]
+        }
+    ],
+    "orders": [
+        {
+            "orderName": "Хрещений батько",
+            "price": 32,
+            "clientName": "Максимко",
+            "date": "14.02.2025",
+            "time": "16:30"
+        },
+        {
+            "orderName": "Конюшиновий клуб",
+            "price": 14,
+            "clientName": "Дарінка",
+            "date": "14.02.2025",
+            "time": "16:23"
+        },
+        {
+            "orderName": "Джин тонік",
+            "price": 25,
+            "clientName": "Владік",
+            "date": "22.06.1941",
+            "time": "04:00"
+        },
+        {
+            "orderName": "Старий добрий",
+            "price": 75,
+            "clientName": "Юлічка",
+            "date": "15.11.1099",
+            "time": "06:66"
+        }
+    ],
+    "storage": [
+        {
+            "name": "Віскі Jameson",
+            "volume": 0.7,
+            "type": "ірландський віскі",
+            "price": 495
+        },
+        {
+            "name": "Nemiroff",
+            "volume": 0.5,
+            "type": "горілка",
+            "price": 221
+        },
+        {
+            "name": "Pinot Grigio",
+            "volume": 0.7,
+            "type": "біле вино",
+            "price": 320
+        }
+    ]
+}
