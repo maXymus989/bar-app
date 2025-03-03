@@ -1,9 +1,10 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Text, Pressable, StyleSheet, View, ScrollView } from "react-native";
 import { Button, Dialog, Divider, Input } from "@rneui/base";
 import { ColorThemeContext } from "../app/index";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
+import Ingredient from "./Ingredient";
 
 /**
  * Custom Dialog based on RNE Dialog.
@@ -14,7 +15,7 @@ import { Image } from "expo-image";
  * @param {boolean} [props.isNew = true] - If true - renders one button, if false - two.
  * @param {string?} props.imageName - Puts image of beverage.
  * @param {string?} props.name - Beverage name.
- * @param {React.ReactNode} props.children - Puts children in ScrollView.
+ * @param {Object[]} props.itemsList - List of ingredient objects.
  * @returns {JSX.Element} - Returns dialog.
  */
 const MenuItemDialog = ({
@@ -23,21 +24,38 @@ const MenuItemDialog = ({
   isNew = true,
   imageName,
   name,
-  children,
+  itemsList,
 }) => {
   const ColorPalette = useContext(ColorThemeContext);
   const dividerWidth = 10;
   const textColor = { color: ColorPalette.main.darkText };
+
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    setItems(itemsList ? itemsList : []);
+  }, [itemsList]);
+
+  const addItem = () => {
+    const newItem = {
+      id: Date.now(),
+    };
+    setItems([...items, newItem]);
+  };
+
+  const removeIngredient = (id) => {
+    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  };
 
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images", "videos"],
+      mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.2,
+      quality: 0.8,
     });
 
     console.log(result);
@@ -90,6 +108,7 @@ const MenuItemDialog = ({
           fontSize: 14,
         }}
       />
+
       <Text style={[styles.text, textColor]}>Інгридієнти</Text>
       <View style={styles.textRow}>
         <Text style={[styles.text, styles.flex2, textColor, { fontSize: 8 }]}>
@@ -106,7 +125,11 @@ const MenuItemDialog = ({
         </Text>
       </View>
       <View style={[styles.ingredientContainer]}>
-        <ScrollView>{children}</ScrollView>
+        <ScrollView>
+          {items.map((item) => (
+            <Ingredient key={item.id} item={item} onDelete={removeIngredient} />
+          ))}
+        </ScrollView>
       </View>
       <Button
         title={"+"}
@@ -115,7 +138,7 @@ const MenuItemDialog = ({
         titleStyle={textColor}
         type="outline"
         onPress={() => {
-          setImage(null);
+          addItem();
         }}
       />
       <Divider width={dividerWidth} />
@@ -183,9 +206,6 @@ const styles = StyleSheet.create({
     fontFamily: "KyivTypeSerif-Heavy",
     textAlign: "center",
     fontSize: 14,
-  },
-  textRotated: {
-    transform: [{ rotate: "90deg" }],
   },
   textRow: {
     flexDirection: "row",
