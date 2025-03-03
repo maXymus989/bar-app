@@ -12,6 +12,7 @@ const Index = () => {
   const [loaded, error] = useFonts({
     "KyivTypeTitling-Bold": require("../assets/fonts/KyivTypeTitling-Bold.ttf"),
     "KyivTypeSerif-Heavy": require("../assets/fonts/KyivTypeSerif-Heavy.ttf"),
+    "KyivTypeSerif-Medium": require("../assets/fonts/KyivTypeSerif-Medium.ttf"),
   });
 
   const router = useRouter();
