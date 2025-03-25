@@ -1,19 +1,25 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Input } from "@rneui/base";
 import DropDownPicker from "react-native-dropdown-picker";
 import { ColorThemeContext } from "../app/index";
 import Checkbox from "expo-checkbox";
 
-const Ingredient = ({ item, onDelete }) => {
+const Ingredient = ({ item, onDelete, onUpdateIngredient }) => {
   const [isChecked, setChecked] = useState(false);
 
+  const [dropdownValue, setDropdownValue] = useState(item.units || null);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: "мл", value: "en" },
-    { label: "шт", value: "de" },
+    { label: "мл", value: "мл" },
+    { label: "шт", value: "шт" },
+    { label: "г", value: "г" },
   ]);
+
+  useEffect(
+    () => onUpdateIngredient(item.id, "units", dropdownValue),
+    [dropdownValue]
+  );
 
   const ColorPalette = useContext(ColorThemeContext);
 
@@ -23,19 +29,29 @@ const Ingredient = ({ item, onDelete }) => {
       onLongPress={() => onDelete(item.id)}
     >
       <Input
-        value={item.name ? item.name : ""}
+        value={item.name}
         containerStyle={[styles.flex2, styles.inputContainerStyle]}
         inputContainerStyle={{ borderBottomWidth: 0 }}
         inputStyle={styles.inputStyle}
         renderErrorMessage={false}
+        onChangeText={(text) => onUpdateIngredient(item.id, "name", text)}
         placeholder="Назва"
       />
+      {typeof str === "str"}
       <Input
-        value={item.quantity ? item.quantity : ""}
+        keyboardType="numeric"
+        value={item.quantity}
         containerStyle={[styles.flex1, styles.inputContainerStyle]}
         inputContainerStyle={{ borderBottomWidth: 0 }}
         inputStyle={styles.inputStyle}
         renderErrorMessage={false}
+        onChangeText={(text) => {
+          let tempText = text;
+          if (isNaN(text[text.length - 1])) {
+            tempText = text.slice(0, -1);
+          }
+          onUpdateIngredient(item.id, "quantity", text);
+        }}
         placeholder="0"
       />
       <View
@@ -50,10 +66,10 @@ const Ingredient = ({ item, onDelete }) => {
         <DropDownPicker
           listMode="MODAL"
           open={open}
-          value={value}
+          value={item.units}
           items={items}
           setOpen={setOpen}
-          setValue={setValue}
+          setValue={setDropdownValue}
           setItems={setItems}
           textStyle={{ fontSize: 12 }}
           arrowIconStyle={{ width: 10 }}

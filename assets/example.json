@@ -1,78 +1,369 @@
 {
-    "menu": [
+  "menu": [
+    {
+      "id": 1,
+      "image": null,
+      "ingredients": [
         {
-            "name": "Хрещений батько",
-            "image": "",
-            "ingredients": [
-                {
-                    "name": "шотландський віскі",
-                    "quantity": "35",
-                    "unit": "ml",
-                    "check_for_availablity": true
-                },
-                {
-                    "name": "амарето",
-                    "quantity": "35",
-                    "unit": "ml",
-                    "check_for_availablity": true
-                },
-                {
-                    "name": "лід",
-                    "quantity": "1",
-                    "unit": "шт",
-                    "check_for_availablity": false
-                }
-            ]
+          "checkAvailability": false,
+          "id": 101,
+          "name": "Горілка",
+          "quantity": "50",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 102,
+          "name": "Лимонний сік",
+          "quantity": "20",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 103,
+          "name": "Цукровий сироп",
+          "quantity": "10",
+          "units": "мл"
         }
-    ],
-    "orders": [
+      ],
+      "name": "Vodka Sour"
+    },
+    {
+      "id": 2,
+      "image": null,
+      "ingredients": [
         {
-            "orderName": "Хрещений батько",
-            "price": 32,
-            "clientName": "Максимко",
-            "date": "14.02.2025",
-            "time": "16:30"
+          "checkAvailability": false,
+          "id": 201,
+          "name": "Ром",
+          "quantity": "50",
+          "units": "мл"
         },
         {
-            "orderName": "Конюшиновий клуб",
-            "price": 14,
-            "clientName": "Дарінка",
-            "date": "14.02.2025",
-            "time": "16:23"
+          "checkAvailability": false,
+          "id": 202,
+          "name": "Кола",
+          "quantity": "100",
+          "units": "мл"
         },
         {
-            "orderName": "Джин тонік",
-            "price": 25,
-            "clientName": "Владік",
-            "date": "22.06.1941",
-            "time": "04:00"
-        },
-        {
-            "orderName": "Старий добрий",
-            "price": 75,
-            "clientName": "Юлічка",
-            "date": "15.11.1099",
-            "time": "06:66"
+          "checkAvailability": false,
+          "id": 203,
+          "name": "Лайм",
+          "quantity": "1",
+          "units": "долька"
         }
-    ],
-    "storage": [
+      ],
+      "name": "Cuba Libre"
+    },
+    {
+      "id": 3,
+      "image": null,
+      "ingredients": [
         {
-            "name": "Віскі Jameson",
-            "volume": 0.7,
-            "type": "ірландський віскі",
-            "price": 495
+          "checkAvailability": false,
+          "id": 301,
+          "name": "Джин",
+          "quantity": "50",
+          "units": "мл"
         },
         {
-            "name": "Nemiroff",
-            "volume": 0.5,
-            "type": "горілка",
-            "price": 221
+          "checkAvailability": false,
+          "id": 302,
+          "name": "Тонік",
+          "quantity": "150",
+          "units": "мл"
         },
         {
-            "name": "Pinot Grigio",
-            "volume": 0.7,
-            "type": "біле вино",
-            "price": 320
+          "checkAvailability": false,
+          "id": 303,
+          "name": "Лайм",
+          "quantity": "1",
+          "units": "долька"
         }
-    ]
+      ],
+      "name": "Gin & Tonic"
+    },
+    {
+      "id": 4,
+      "image": null,
+      "ingredients": [
+        {
+          "checkAvailability": false,
+          "id": 401,
+          "name": "Текіла",
+          "quantity": "50",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 402,
+          "name": "Тріпл-сек",
+          "quantity": "20",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 403,
+          "name": "Лаймовий сік",
+          "quantity": "20",
+          "units": "мл"
+        }
+      ],
+      "name": "Margarita"
+    },
+    {
+      "id": 5,
+      "image": null,
+      "ingredients": [
+        {
+          "checkAvailability": false,
+          "id": 501,
+          "name": "Бурбон",
+          "quantity": "50",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 502,
+          "name": "Цукровий сироп",
+          "quantity": "10",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 503,
+          "name": "Ангостура",
+          "quantity": "2",
+          "units": "краплі"
+        }
+      ],
+      "name": "Old Fashioned"
+    },
+    {
+      "id": 6,
+      "image": null,
+      "ingredients": [
+        {
+          "checkAvailability": false,
+          "id": 601,
+          "name": "Кавовий лікер",
+          "quantity": "30",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 602,
+          "name": "Горілка",
+          "quantity": "50",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 603,
+          "name": "Вершки",
+          "quantity": "30",
+          "units": "мл"
+        }
+      ],
+      "name": "White Russian"
+    },
+    {
+      "id": 7,
+      "image": null,
+      "ingredients": [
+        {
+          "checkAvailability": false,
+          "id": 701,
+          "name": "Джин",
+          "quantity": "50",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 702,
+          "name": "Сухий вермут",
+          "quantity": "10",
+          "units": "мл"
+        }
+      ],
+      "name": "Dry Martini"
+    },
+    {
+      "id": 8,
+      "image": null,
+      "ingredients": [
+        {
+          "checkAvailability": false,
+          "id": 801,
+          "name": "Віскі",
+          "quantity": "50",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 802,
+          "name": "Лимонний сік",
+          "quantity": "20",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 803,
+          "name": "Цукровий сироп",
+          "quantity": "10",
+          "units": "мл"
+        }
+      ],
+      "name": "Whiskey Sour"
+    },
+    {
+      "id": 9,
+      "image": null,
+      "ingredients": [
+        {
+          "checkAvailability": false,
+          "id": 901,
+          "name": "Шампанське",
+          "quantity": "100",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 902,
+          "name": "Апельсиновий сік",
+          "quantity": "50",
+          "units": "мл"
+        }
+      ],
+      "name": "Mimosa"
+    },
+    {
+      "id": 10,
+      "image": null,
+      "ingredients": [
+        {
+          "checkAvailability": false,
+          "id": 1001,
+          "name": "Ром",
+          "quantity": "50",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 1002,
+          "name": "Кокосове молоко",
+          "quantity": "50",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 1003,
+          "name": "Ананасовий сік",
+          "quantity": "100",
+          "units": "мл"
+        }
+      ],
+      "name": "Piña Colada"
+    },
+    {
+      "id": 11,
+      "image": null,
+      "ingredients": [
+        {
+          "checkAvailability": false,
+          "id": 1101,
+          "name": "Текіла",
+          "quantity": "50",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 1102,
+          "name": "Грейпфрутовий сік",
+          "quantity": "100",
+          "units": "мл"
+        }
+      ],
+      "name": "Paloma"
+    },
+    {
+      "id": 12,
+      "image": null,
+      "ingredients": [
+        {
+          "checkAvailability": false,
+          "id": 1201,
+          "name": "Кампарі",
+          "quantity": "30",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 1202,
+          "name": "Солодкий вермут",
+          "quantity": "30",
+          "units": "мл"
+        },
+        {
+          "checkAvailability": false,
+          "id": 1203,
+          "name": "Джин",
+          "quantity": "30",
+          "units": "мл"
+        }
+      ],
+      "name": "Negroni"
+    }
+  ],
+  "orders": [
+    {
+      "orderName": "Хрещений батько",
+      "price": 32,
+      "clientName": "Максимко",
+      "date": "14.02.2025",
+      "time": "16:30"
+    },
+    {
+      "orderName": "Конюшиновий клуб",
+      "price": 14,
+      "clientName": "Дарінка",
+      "date": "14.02.2025",
+      "time": "16:23"
+    },
+    {
+      "orderName": "Джин тонік",
+      "price": 25,
+      "clientName": "Владік",
+      "date": "22.06.1941",
+      "time": "04:00"
+    },
+    {
+      "orderName": "Старий добрий",
+      "price": 75,
+      "clientName": "Юлічка",
+      "date": "15.11.1099",
+      "time": "06:66"
+    }
+  ],
+  "storage": [
+    {
+      "name": "Віскі Jameson",
+      "volume": 0.7,
+      "type": "ірландський віскі",
+      "price": 495
+    },
+    {
+      "name": "Nemiroff",
+      "volume": 0.5,
+      "type": "горілка",
+      "price": 221
+    },
+    {
+      "name": "Pinot Grigio",
+      "volume": 0.7,
+      "type": "біле вино",
+      "price": 320
+    }
+  ]
 }

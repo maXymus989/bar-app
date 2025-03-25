@@ -6,48 +6,51 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import Ingredient from "./Ingredient";
 
-/**
- * Custom Dialog based on RNE Dialog.
- *
- * @param {Object} props - Component props.
- * @param {boolean} props.isVisible - Is visible state.
- * @param {function} props.setIsVisible - Function to set state of visibility.
- * @param {boolean} [props.isNew = true] - If true - renders one button, if false - two.
- * @param {string?} props.imageName - Puts image of beverage.
- * @param {string?} props.name - Beverage name.
- * @param {Object[]} props.itemsList - List of ingredient objects.
- * @returns {JSX.Element} - Returns dialog.
- */
 const MenuItemDialog = ({
   isVisible,
   setIsVisible,
   isNew = true,
-  imageName,
-  name,
-  itemsList,
+  menuItem = {},
+  onAddMenuItem,
 }) => {
   const ColorPalette = useContext(ColorThemeContext);
   const dividerWidth = 10;
   const textColor = { color: ColorPalette.main.darkText };
 
-  const [items, setItems] = useState([]);
+  const [nameState, setNameState] = useState(menuItem.name || "");
+  const [image, setImage] = useState(menuItem.image || null);
+
+  const [ingredients, setIngredient] = useState([]);
 
   useEffect(() => {
-    setItems(itemsList ? itemsList : []);
-  }, [itemsList]);
+    setIngredient(menuItem.ingredients || []);
+  }, [menuItem.ingredients]);
 
-  const addItem = () => {
-    const newItem = {
+  const addIngredient = () => {
+    const newIngredient = {
       id: Date.now(),
+      name: "",
+      quantity: 0,
+      units: "-",
+      checkAvailability: false,
     };
-    setItems([...items, newItem]);
+
+    setIngredient([...ingredients, newIngredient]);
+  };
+
+  const updateIngredient = (id, field, value) => {
+    setIngredient((prevIngredients) =>
+      prevIngredients.map((ingredient) =>
+        ingredient.id === id ? { ...ingredient, [field]: value } : ingredient
+      )
+    );
   };
 
   const removeIngredient = (id) => {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setIngredient((prevIngredients) =>
+      prevIngredients.filter((ingredient) => ingredient.id !== id)
+    );
   };
-
-  const [image, setImage] = useState(null);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -101,7 +104,8 @@ const MenuItemDialog = ({
       <Divider width={dividerWidth} />
       <Input
         placeholder="Назва напою"
-        value={name}
+        value={nameState}
+        onChangeText={setNameState}
         inputStyle={{
           backgroundColor: "white",
           fontFamily: "KyivTypeSerif-Heavy",
@@ -126,8 +130,13 @@ const MenuItemDialog = ({
       </View>
       <View style={[styles.ingredientContainer]}>
         <ScrollView>
-          {items.map((item) => (
-            <Ingredient key={item.id} item={item} onDelete={removeIngredient} />
+          {ingredients.map((ingredient) => (
+            <Ingredient
+              key={ingredient.id}
+              item={ingredient}
+              onDelete={removeIngredient}
+              onUpdateIngredient={updateIngredient}
+            />
           ))}
         </ScrollView>
       </View>
@@ -138,7 +147,7 @@ const MenuItemDialog = ({
         titleStyle={textColor}
         type="outline"
         onPress={() => {
-          addItem();
+          addIngredient();
         }}
       />
       <Divider width={dividerWidth} />
@@ -155,6 +164,15 @@ const MenuItemDialog = ({
             styles.text,
           ]}
           containerStyle={[styles.buttonContainer, { width: "50%" }]}
+          onPressOut={() => {
+            onAddMenuItem({
+              id: Date.now(),
+              name: nameState,
+              image,
+              ingredients,
+            });
+            setIsVisible(false);
+          }}
         />
       ) : (
         <View style={{ flexDirection: "row" }}>

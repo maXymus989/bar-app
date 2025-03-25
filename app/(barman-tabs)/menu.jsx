@@ -1,12 +1,36 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { FAB } from "@rneui/base";
 import { ColorThemeContext } from "../index";
 import MenuItemDialog from "../../Components/MenuItemDialog";
+import MenuItem from "../../Components/MenuItem";
 
 const Menu = () => {
   const ColorPalette = useContext(ColorThemeContext);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [updateModalVisible, setUpdateModalVisible] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
+  const [currentItemId, setCurrentItemId] = useState("");
+  useEffect(() => {
+    console.log(menuItems);
+  }, [menuItems]);
+
+  const addMenuItem = (menuItem) => {
+    console.log(menuItem);
+    setMenuItems((prevState) => [...prevState, menuItem]);
+  };
+
+  const removeMenuItem = (menuItemId) => {
+    setMenuItems((prevState) =>
+      prevState.filter((menuItem) => menuItem.id !== menuItemId)
+    );
+  };
+
+  const openMenuItemDialog = (menuItemId) => {
+    setCurrentItemId(menuItemId);
+    setUpdateModalVisible(true);
+    console.log(menuItemId);
+  };
 
   return (
     <View
@@ -15,7 +39,16 @@ const Menu = () => {
         flex: 1,
       }}
     >
-      <ScrollView contentContainerStyle={styles.window}></ScrollView>
+      <ScrollView contentContainerStyle={styles.window}>
+        {menuItems.map((menuItem, key) => (
+          <MenuItem
+            menuItemObj={menuItem}
+            key={key}
+            onDeleteMenuItem={removeMenuItem}
+            onUpdateMenuItem={openMenuItemDialog}
+          />
+        ))}
+      </ScrollView>
 
       <FAB
         visible={true}
@@ -23,11 +56,26 @@ const Menu = () => {
         color={ColorPalette.main.buttons_modalBackground}
         style={styles.FABStyle}
         onPress={() => {
-          setModalVisible(true);
+          setAddModalVisible(true);
         }}
       />
 
-      <MenuItemDialog isVisible={modalVisible} setIsVisible={setModalVisible} />
+      {addModalVisible && (
+        <MenuItemDialog
+          isVisible={addModalVisible}
+          setIsVisible={setAddModalVisible}
+          onAddMenuItem={addMenuItem}
+        />
+      )}
+
+      {updateModalVisible && (
+        <MenuItemDialog
+          isVisible={updateModalVisible}
+          setIsVisible={setUpdateModalVisible}
+          isNew={false}
+          menuItem={menuItems.find((menuItem) => menuItem.id === currentItemId)}
+        />
+      )}
     </View>
   );
 };
