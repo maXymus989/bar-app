@@ -4,27 +4,17 @@ import { FAB } from "@rneui/base";
 import { ColorThemeContext } from "../index";
 import MenuItemDialog from "../../Components/MenuItemDialog";
 import MenuItem from "../../Components/MenuItem";
+import useBarStore from "../../state";
 
 const Menu = () => {
   const ColorPalette = useContext(ColorThemeContext);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
-  const [menuItems, setMenuItems] = useState([]);
+  const { menu, addMenuItem, updateMenuItem, removeMenuItem } = useBarStore();
   const [currentItemId, setCurrentItemId] = useState("");
   useEffect(() => {
-    console.log(menuItems);
-  }, [menuItems]);
-
-  const addMenuItem = (menuItem) => {
-    console.log(menuItem);
-    setMenuItems((prevState) => [...prevState, menuItem]);
-  };
-
-  const removeMenuItem = (menuItemId) => {
-    setMenuItems((prevState) =>
-      prevState.filter((menuItem) => menuItem.id !== menuItemId)
-    );
-  };
+    console.log(menu);
+  }, [menu]);
 
   const openMenuItemDialog = (menuItemId) => {
     setCurrentItemId(menuItemId);
@@ -40,7 +30,7 @@ const Menu = () => {
       }}
     >
       <ScrollView contentContainerStyle={styles.window}>
-        {menuItems.map((menuItem, key) => (
+        {menu.map((menuItem, key) => (
           <MenuItem
             menuItemObj={menuItem}
             key={key}
@@ -73,7 +63,7 @@ const Menu = () => {
           isVisible={updateModalVisible}
           setIsVisible={setUpdateModalVisible}
           isNew={false}
-          menuItem={menuItems.find((menuItem) => menuItem.id === currentItemId)}
+          menuItem={menu.find((menuItem) => menuItem.id === currentItemId)}
         />
       )}
     </View>

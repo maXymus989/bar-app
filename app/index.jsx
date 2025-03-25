@@ -2,7 +2,6 @@ import { createContext } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { Button } from "@rneui/base";
 import { useFonts } from "expo-font";
-import AppLoading from "expo-app-loading";
 import { useRouter } from "expo-router";
 
 const ColorPalette = require("../assets/color_palette.json");
@@ -16,14 +15,6 @@ const Index = () => {
   });
 
   const router = useRouter();
-
-  if (!loaded) {
-    <AppLoading />;
-  }
-
-  if (error) {
-    console.log(error.message);
-  }
 
   return (
     <View
