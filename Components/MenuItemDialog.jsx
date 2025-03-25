@@ -12,6 +12,8 @@ const MenuItemDialog = ({
   isNew = true,
   menuItem = {},
   onAddMenuItem,
+  onUpdateMenuItem,
+  onRemoveMenuItem,
 }) => {
   const ColorPalette = useContext(ColorThemeContext);
   const dividerWidth = 10;
@@ -188,6 +190,14 @@ const MenuItemDialog = ({
               styles.text,
             ]}
             containerStyle={[styles.buttonContainer, styles.buttonMargin]}
+            onPress={() => {
+              onUpdateMenuItem(menuItem.id, {
+                name: nameState,
+                image,
+                ingredients,
+              });
+              setIsVisible(false);
+            }}
           />
           <Button
             title={"Видалити"}
@@ -201,6 +211,10 @@ const MenuItemDialog = ({
               styles.text,
             ]}
             containerStyle={[styles.buttonContainer, styles.buttonMargin]}
+            onPress={() => {
+              onRemoveMenuItem(menuItem.id);
+              setIsVisible(false);
+            }}
           />
         </View>
       )}

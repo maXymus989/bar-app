@@ -5,7 +5,7 @@ import { Text } from "@rneui/base";
 import { ColorThemeContext } from "../app/index";
 
 const MenuItem = (props) => {
-  const { menuItemObj, onDeleteMenuItem, onUpdateMenuItem } = props;
+  const { menuItemObj, onDeleteMenuItem, onMenuItemDialog } = props;
 
   const ColorPalette = useContext(ColorThemeContext);
 
@@ -16,7 +16,7 @@ const MenuItem = (props) => {
         { backgroundColor: ColorPalette.main.lightText_listItemsBackground },
       ]}
       onLongPress={() => onDeleteMenuItem(menuItemObj.id)}
-      onPress={() => onUpdateMenuItem(menuItemObj.id)}
+      onPress={() => onMenuItemDialog(menuItemObj.id)}
     >
       <View style={styles.innerContainer}>
         <View

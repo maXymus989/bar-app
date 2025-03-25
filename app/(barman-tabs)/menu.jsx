@@ -35,7 +35,7 @@ const Menu = () => {
             menuItemObj={menuItem}
             key={key}
             onDeleteMenuItem={removeMenuItem}
-            onUpdateMenuItem={openMenuItemDialog}
+            onMenuItemDialog={openMenuItemDialog}
           />
         ))}
       </ScrollView>
@@ -64,6 +64,8 @@ const Menu = () => {
           setIsVisible={setUpdateModalVisible}
           isNew={false}
           menuItem={menu.find((menuItem) => menuItem.id === currentItemId)}
+          onUpdateMenuItem={updateMenuItem}
+          onRemoveMenuItem={removeMenuItem}
         />
       )}
     </View>
