@@ -5,6 +5,7 @@ import { ColorThemeContext } from "../app/index";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import Ingredient from "./Ingredient";
+import AlertDialog from "./AlertDialog";
 
 const MenuItemDialog = ({
   isVisible,
@@ -19,10 +20,13 @@ const MenuItemDialog = ({
   const dividerWidth = 10;
   const textColor = { color: ColorPalette.main.darkText };
 
-  const [nameState, setNameState] = useState(menuItem.name || "");
+  const [name, setName] = useState(menuItem.name || "");
   const [image, setImage] = useState(menuItem.image || null);
-
   const [ingredients, setIngredient] = useState([]);
+
+  const [alertVisible, setAlertVisible] = useState(false);
+
+  const arrayOfUnits = ["г", "шт", "мл"];
 
   useEffect(() => {
     setIngredient(menuItem.ingredients || []);
@@ -70,116 +74,116 @@ const MenuItemDialog = ({
     }
   };
 
+  const isValid = () => {
+    const maxCharactersLength = 40;
+
+    if (name.length === 0 || name.length > maxCharactersLength) return false;
+
+    return !ingredients.some(
+      (ingredient) =>
+        ingredient.name.length === 0 ||
+        ingredient.name.length > maxCharactersLength ||
+        isNaN(ingredient.quantity) ||
+        ingredient.quantity === 0 ||
+        ingredient.quantity > 1000 ||
+        !arrayOfUnits.includes(ingredient.units)
+    );
+  };
+
   return (
-    <Dialog
-      isVisible={isVisible}
-      onBackdropPress={() => setIsVisible(false)}
-      overlayStyle={[
-        styles.dialogWindow,
-        {
-          backgroundColor: ColorPalette.main.buttons_modalBackground,
-        },
-      ]}
-      animationType="fade"
-    >
-      {image ? (
-        <Image
-          style={styles.addPhotoContainer}
-          source={image}
-          contentFit="cover"
-          transition={1000}
-        />
-      ) : (
-        <Pressable
-          style={({ pressed }) => [
-            { backgroundColor: pressed ? "grey" : "white" },
-            styles.addPhotoContainer,
-          ]}
-          onPress={() => {
-            pickImage();
+    <>
+      <AlertDialog
+        visible={alertVisible}
+        setVisible={setAlertVisible}
+        alertText={
+          "Вимоги до форми:\n1. Назва напою і інгридієнтів (до 40 символів)\n2. Числове значення для кількості.\n3. Обрані одиниці виміру."
+        }
+        alertTitle={"Неправильно заповнено форму!"}
+      ></AlertDialog>
+      <Dialog
+        isVisible={isVisible}
+        overlayStyle={[
+          styles.dialogWindow,
+          {
+            backgroundColor: ColorPalette.main.buttons_modalBackground,
+          },
+        ]}
+        animationType="fade"
+      >
+        {image ? (
+          <Image
+            style={styles.addPhotoContainer}
+            source={image}
+            contentFit="cover"
+            transition={1000}
+          />
+        ) : (
+          <Pressable
+            style={({ pressed }) => [
+              { backgroundColor: pressed ? "grey" : "white" },
+              styles.addPhotoContainer,
+            ]}
+            onPress={() => {
+              pickImage();
+            }}
+          >
+            <Text style={[styles.text, textColor]}>Додати фото</Text>
+          </Pressable>
+        )}
+
+        <Divider width={dividerWidth} />
+        <Input
+          placeholder="Назва напою"
+          value={name}
+          onChangeText={setName}
+          inputStyle={{
+            backgroundColor: "white",
+            fontFamily: "KyivTypeSerif-Heavy",
+            fontSize: 14,
           }}
-        >
-          <Text style={[styles.text, textColor]}>Додати фото</Text>
-        </Pressable>
-      )}
+        />
 
-      <Divider width={dividerWidth} />
-      <Input
-        placeholder="Назва напою"
-        value={nameState}
-        onChangeText={setNameState}
-        inputStyle={{
-          backgroundColor: "white",
-          fontFamily: "KyivTypeSerif-Heavy",
-          fontSize: 14,
-        }}
-      />
-
-      <Text style={[styles.text, textColor]}>Інгридієнти</Text>
-      <View style={styles.textRow}>
-        <Text style={[styles.text, styles.flex2, textColor, { fontSize: 8 }]}>
-          Назва
-        </Text>
-        <Text style={[styles.text, styles.flex1, textColor, { fontSize: 8 }]}>
-          Кількість
-        </Text>
-        <Text style={[styles.text, styles.flex1, textColor, { fontSize: 8 }]}>
-          Одиниці
-        </Text>
-        <Text style={[styles.text, styles.flex1, textColor, { fontSize: 8 }]}>
-          Перевіряти наявність
-        </Text>
-      </View>
-      <View style={[styles.ingredientContainer]}>
-        <ScrollView>
-          {ingredients.map((ingredient) => (
-            <Ingredient
-              key={ingredient.id}
-              item={ingredient}
-              onDelete={removeIngredient}
-              onUpdateIngredient={updateIngredient}
-            />
-          ))}
-        </ScrollView>
-      </View>
-      <Button
-        title={"+"}
-        containerStyle={styles.addButtonContainer}
-        buttonStyle={styles.addButton}
-        titleStyle={textColor}
-        type="outline"
-        onPress={() => {
-          addIngredient();
-        }}
-      />
-      <Divider width={dividerWidth} />
-      {isNew ? (
+        <Text style={[styles.text, textColor]}>Інгридієнти</Text>
+        <View style={styles.textRow}>
+          <Text style={[styles.text, styles.flex2, textColor, { fontSize: 8 }]}>
+            Назва
+          </Text>
+          <Text style={[styles.text, styles.flex1, textColor, { fontSize: 8 }]}>
+            Кількість
+          </Text>
+          <Text style={[styles.text, styles.flex1, textColor, { fontSize: 8 }]}>
+            Одиниці
+          </Text>
+          <Text style={[styles.text, styles.flex1, textColor, { fontSize: 8 }]}>
+            Перевіряти наявність
+          </Text>
+        </View>
+        <View style={[styles.ingredientContainer]}>
+          <ScrollView>
+            {ingredients.map((ingredient) => (
+              <Ingredient
+                key={ingredient.id}
+                item={ingredient}
+                onDelete={removeIngredient}
+                onUpdateIngredient={updateIngredient}
+              />
+            ))}
+          </ScrollView>
+        </View>
         <Button
-          title={"Додати"}
-          buttonStyle={{
-            backgroundColor: ColorPalette.main.background_modalButtons,
-          }}
-          titleStyle={[
-            {
-              color: ColorPalette.main.lightText_listItemsBackground,
-            },
-            styles.text,
-          ]}
-          containerStyle={[styles.buttonContainer, { width: "50%" }]}
-          onPressOut={() => {
-            onAddMenuItem({
-              id: Date.now(),
-              name: nameState,
-              image,
-              ingredients,
-            });
-            setIsVisible(false);
+          title={"+"}
+          containerStyle={styles.addButtonContainer}
+          buttonStyle={styles.addButton}
+          titleStyle={textColor}
+          type="outline"
+          onPress={() => {
+            addIngredient();
           }}
         />
-      ) : (
-        <View style={{ flexDirection: "row" }}>
+        <Divider width={dividerWidth} />
+        {isNew ? (
           <Button
-            title={"Зберегти"}
+            title={"Додати"}
             buttonStyle={{
               backgroundColor: ColorPalette.main.background_modalButtons,
             }}
@@ -189,36 +193,69 @@ const MenuItemDialog = ({
               },
               styles.text,
             ]}
-            containerStyle={[styles.buttonContainer, styles.buttonMargin]}
-            onPress={() => {
-              onUpdateMenuItem(menuItem.id, {
-                name: nameState,
-                image,
-                ingredients,
-              });
-              setIsVisible(false);
+            containerStyle={[styles.buttonContainer, { width: "50%" }]}
+            onPressOut={() => {
+              if (isValid()) {
+                onAddMenuItem({
+                  id: Date.now(),
+                  name: name,
+                  image,
+                  ingredients,
+                });
+                setIsVisible(false);
+              } else {
+                setAlertVisible(true);
+              }
             }}
           />
-          <Button
-            title={"Видалити"}
-            buttonStyle={{
-              backgroundColor: ColorPalette.main.notButtons,
-            }}
-            titleStyle={[
-              {
-                color: "black",
-              },
-              styles.text,
-            ]}
-            containerStyle={[styles.buttonContainer, styles.buttonMargin]}
-            onPress={() => {
-              onRemoveMenuItem(menuItem.id);
-              setIsVisible(false);
-            }}
-          />
-        </View>
-      )}
-    </Dialog>
+        ) : (
+          <View style={{ flexDirection: "row" }}>
+            <Button
+              title={"Зберегти"}
+              buttonStyle={{
+                backgroundColor: ColorPalette.main.background_modalButtons,
+              }}
+              titleStyle={[
+                {
+                  color: ColorPalette.main.lightText_listItemsBackground,
+                },
+                styles.text,
+              ]}
+              containerStyle={[styles.buttonContainer, styles.buttonMargin]}
+              onPress={() => {
+                if (isValid()) {
+                  onUpdateMenuItem(menuItem.id, {
+                    name,
+                    image,
+                    ingredients,
+                  });
+                  setIsVisible(false);
+                } else {
+                  setAlertVisible(true);
+                }
+              }}
+            />
+            <Button
+              title={"Видалити"}
+              buttonStyle={{
+                backgroundColor: ColorPalette.main.notButtons,
+              }}
+              titleStyle={[
+                {
+                  color: "black",
+                },
+                styles.text,
+              ]}
+              containerStyle={[styles.buttonContainer, styles.buttonMargin]}
+              onPress={() => {
+                onRemoveMenuItem(menuItem.id);
+                setIsVisible(false);
+              }}
+            />
+          </View>
+        )}
+      </Dialog>
+    </>
   );
 };
 

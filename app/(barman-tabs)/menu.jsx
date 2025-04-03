@@ -77,6 +77,7 @@ export default Menu;
 const styles = StyleSheet.create({
   window: {
     alignItems: "center",
+    paddingBottom: 10,
   },
   FABStyle: {
     position: "absolute",

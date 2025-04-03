@@ -6,7 +6,7 @@ import { ColorThemeContext } from "../app/index";
 import Checkbox from "expo-checkbox";
 
 const Ingredient = ({ item, onDelete, onUpdateIngredient }) => {
-  const [isChecked, setChecked] = useState(false);
+  const [isChecked, setChecked] = useState(item.isRequired || false);
 
   const [dropdownValue, setDropdownValue] = useState(item.units || null);
   const [open, setOpen] = useState(false);
@@ -19,6 +19,11 @@ const Ingredient = ({ item, onDelete, onUpdateIngredient }) => {
   useEffect(
     () => onUpdateIngredient(item.id, "units", dropdownValue),
     [dropdownValue]
+  );
+
+  useEffect(
+    () => onUpdateIngredient(item.id, "isRequired", isChecked),
+    [isChecked]
   );
 
   const ColorPalette = useContext(ColorThemeContext);
@@ -46,7 +51,6 @@ const Ingredient = ({ item, onDelete, onUpdateIngredient }) => {
         inputStyle={styles.inputStyle}
         renderErrorMessage={false}
         onChangeText={(text) => {
-          let tempText = text;
           if (isNaN(text[text.length - 1])) {
             tempText = text.slice(0, -1);
           }
