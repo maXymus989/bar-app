@@ -108,6 +108,7 @@ const MenuItemDialog = ({
             backgroundColor: ColorPalette.main.buttons_modalBackground,
           },
         ]}
+        {...(isNew && { onBackdropPress: () => setIsVisible(false) })}
         animationType="fade"
       >
         {image ? (
