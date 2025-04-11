@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, Text } from "react-native";
 import { FAB } from "@rneui/base";
 import { ColorThemeContext } from "../index";
 import MenuItemDialog from "../../Components/MenuItemDialog";
@@ -10,11 +10,24 @@ const Menu = () => {
   const ColorPalette = useContext(ColorThemeContext);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
-  const { menu, addMenuItem, updateMenuItem, removeMenuItem } = useBarStore();
+  const {
+    menu,
+    addMenuItem,
+    updateMenuItem,
+    removeMenuItem,
+    isLoaded,
+    fetchData,
+  } = useBarStore();
   const [currentItemId, setCurrentItemId] = useState("");
   useEffect(() => {
     console.log(menu);
   }, [menu]);
+
+  useEffect(() => {
+    if (!isLoaded) {
+      fetchData();
+    }
+  }, [isLoaded]);
 
   const openMenuItemDialog = (menuItemId) => {
     setCurrentItemId(menuItemId);
@@ -30,13 +43,25 @@ const Menu = () => {
       }}
     >
       <ScrollView contentContainerStyle={styles.window}>
-        {menu.map((menuItem, key) => (
-          <MenuItem
-            menuItemObj={menuItem}
-            key={key}
-            onMenuItemDialog={openMenuItemDialog}
-          />
-        ))}
+        {!isLoaded ? (
+          <Text
+            style={{
+              color: "white",
+              fontFamily: "KyivTypeSerif-Heavy",
+              fontSize: 20,
+            }}
+          >
+            Завантаження...
+          </Text>
+        ) : (
+          menu.map((menuItem, key) => (
+            <MenuItem
+              menuItemObj={menuItem}
+              key={key}
+              onMenuItemDialog={openMenuItemDialog}
+            />
+          ))
+        )}
       </ScrollView>
 
       <FAB

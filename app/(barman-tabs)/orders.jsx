@@ -1,10 +1,19 @@
-import { useContext } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { useContext, useEffect } from "react";
+import { ScrollView, StyleSheet, View, Text } from "react-native";
 import { ColorThemeContext } from "../index";
 import Order from "../../Components/Order";
+import useBarStore from "../../state";
 
 const Orders = () => {
   const ColorPalette = useContext(ColorThemeContext);
+
+  const { orders, isLoaded, fetchData } = useBarStore();
+
+  useEffect(() => {
+    if (!isLoaded) {
+      fetchData();
+    }
+  }, [isLoaded]);
 
   return (
     <View
@@ -14,13 +23,21 @@ const Orders = () => {
       }}
     >
       <ScrollView contentContainerStyle={styles.window}>
-        <Order
-          orderName={"Хрещений батько"}
-          price={"32 грн"}
-          clientName={"Максимко"}
-          date={"14.02.2025"}
-          time={"16:30"}
-        />
+        {!isLoaded ? (
+          <Text
+            style={{
+              color: "white",
+              fontFamily: "KyivTypeSerif-Heavy",
+              fontSize: 20,
+            }}
+          >
+            Завантаження...
+          </Text>
+        ) : (
+          orders.map((orderItem, key) => (
+            <Order orderItemObj={orderItem} key={key} />
+          ))
+        )}
       </ScrollView>
     </View>
   );

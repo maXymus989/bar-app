@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { FAB } from "@rneui/base";
 import { ColorThemeContext } from "../index";
@@ -12,8 +12,20 @@ const Storage = () => {
   const [updateItemDialogVisible, setUpdateItemDialogVisible] = useState(false);
   const [currentItemId, setCurrentItemId] = useState("");
 
-  const { storage, addStorageItem, updateStorageItem, removeStorageItem } =
-    useBarStore();
+  const {
+    storage,
+    addStorageItem,
+    updateStorageItem,
+    removeStorageItem,
+    isLoaded,
+    fetchData,
+  } = useBarStore();
+
+  useEffect(() => {
+    if (!isLoaded) {
+      fetchData();
+    }
+  }, [isLoaded]);
 
   const openStorageItemDialog = (storageItemId) => {
     setCurrentItemId(storageItemId);
@@ -28,14 +40,26 @@ const Storage = () => {
       }}
     >
       <ScrollView contentContainerStyle={styles.window}>
-        {storage.map((storageItem, key) => (
-          <StorageItem
-            storageItemObj={storageItem}
-            key={key}
-            onDeleteMenuItem={removeStorageItem}
-            onStorageItemDialog={openStorageItemDialog}
-          />
-        ))}
+        {!isLoaded ? (
+          <Text
+            style={{
+              color: "white",
+              fontFamily: "KyivTypeSerif-Heavy",
+              fontSize: 20,
+            }}
+          >
+            Завантаження...
+          </Text>
+        ) : (
+          storage.map((storageItem, key) => (
+            <StorageItem
+              storageItemObj={storageItem}
+              key={key}
+              onDeleteMenuItem={removeStorageItem}
+              onStorageItemDialog={openStorageItemDialog}
+            />
+          ))
+        )}
       </ScrollView>
       <FAB
         visible={true}

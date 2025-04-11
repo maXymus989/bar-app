@@ -4,7 +4,7 @@ import { Text } from "@rneui/base";
 import { ColorThemeContext } from "../app/index";
 
 const Order = (props) => {
-  const { orderName, price, clientName, date, time } = props;
+  const { orderItemObj } = props;
 
   const ColorPalette = useContext(ColorThemeContext);
 
@@ -20,18 +20,18 @@ const Order = (props) => {
       <View style={styles.innerContainer}>
         <View style={styles.orderNameAndDateView}>
           <Text style={[{ fontFamily: fontName, fontSize: 18 }]}>
-            {orderName}
+            {orderItemObj.orderName}
           </Text>
           <Text style={[{ fontFamily: fontName, fontSize: 14 }]}>
-            {date + " " + time}
+            {orderItemObj.date + " " + orderItemObj.time}
           </Text>
         </View>
 
         <Text style={[{ fontFamily: fontName, fontSize: 14 }]}>
-          {"Собівартість: " + price}
+          {"Собівартість: " + orderItemObj.price}
         </Text>
         <Text style={[{ fontFamily: fontName, fontSize: 14 }]}>
-          {"Замовник: " + clientName}
+          {"Замовник: " + orderItemObj.clientName}
         </Text>
       </View>
     </View>
