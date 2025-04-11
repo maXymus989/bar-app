@@ -18,8 +18,14 @@ const useBarStore = create((set) => ({
 
   addStorageItem: (item) =>
     set((state) => ({ storage: [...state.storage, item] })),
-  removeStorageItem: (name) =>
-    set((state) => ({ storage: state.storage.filter((s) => s.name !== name) })),
+  updateStorageItem: (id, newData) =>
+    set((state) => ({
+      storage: state.storage.map((item) =>
+        item.id === id ? { ...item, ...newData } : item
+      ),
+    })),
+  removeStorageItem: (id) =>
+    set((state) => ({ storage: state.storage.filter((s) => s.id !== id) })),
 }));
 
 export default useBarStore;

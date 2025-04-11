@@ -1,10 +1,24 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { FAB } from "@rneui/base";
 import { ColorThemeContext } from "../index";
+import StorageItem from "../../Components/StorageItem";
+import StorageItemDialog from "../../Components/StorageItemDialog";
+import useBarStore from "../../state";
 
 const Storage = () => {
   const ColorPalette = useContext(ColorThemeContext);
+  const [addItemDialogVisible, setAddItemDialogVisible] = useState(false);
+  const [updateItemDialogVisible, setUpdateItemDialogVisible] = useState(false);
+  const [currentItemId, setCurrentItemId] = useState("");
+
+  const { storage, addStorageItem, updateStorageItem, removeStorageItem } =
+    useBarStore();
+
+  const openStorageItemDialog = (storageItemId) => {
+    setCurrentItemId(storageItemId);
+    setUpdateItemDialogVisible(true);
+  };
 
   return (
     <View
@@ -13,13 +27,44 @@ const Storage = () => {
         flex: 1,
       }}
     >
-      <ScrollView contentContainerStyle={styles.window}></ScrollView>
+      <ScrollView contentContainerStyle={styles.window}>
+        {storage.map((storageItem, key) => (
+          <StorageItem
+            storageItemObj={storageItem}
+            key={key}
+            onDeleteMenuItem={removeStorageItem}
+            onStorageItemDialog={openStorageItemDialog}
+          />
+        ))}
+      </ScrollView>
       <FAB
         visible={true}
         icon={{ name: "add" }}
         color={ColorPalette.main.buttons_modalBackground}
         style={styles.FABStyle}
+        onPress={() => setAddItemDialogVisible(true)}
       />
+
+      {addItemDialogVisible && (
+        <StorageItemDialog
+          isVisible={addItemDialogVisible}
+          setIsVisible={setAddItemDialogVisible}
+          onAddStorageItem={addStorageItem}
+        />
+      )}
+
+      {updateItemDialogVisible && (
+        <StorageItemDialog
+          isVisible={updateItemDialogVisible}
+          setIsVisible={setUpdateItemDialogVisible}
+          isNew={false}
+          storageItem={storage.find(
+            (storageItem) => storageItem.id === currentItemId
+          )}
+          onUpdateStorageItem={updateStorageItem}
+          onRemoveStorageItem={removeStorageItem}
+        />
+      )}
     </View>
   );
 };

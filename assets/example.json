@@ -348,22 +348,28 @@
   ],
   "storage": [
     {
+      "id": 1,
       "name": "Віскі Jameson",
-      "volume": 0.7,
+      "volume": "0.7",
       "type": "ірландський віскі",
-      "price": 495
+      "price": "495",
+      "inStock": true
     },
     {
+      "id": 2,
       "name": "Nemiroff",
-      "volume": 0.5,
+      "volume": "0.5",
       "type": "горілка",
-      "price": 221
+      "price": "221",
+      "inStock": true
     },
     {
+      "id": 3,
       "name": "Pinot Grigio",
-      "volume": 0.7,
+      "volume": "0.7",
       "type": "біле вино",
-      "price": 320
+      "price": "320",
+      "inStock": true
     }
   ]
 }
