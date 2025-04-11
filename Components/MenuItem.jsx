@@ -15,7 +15,6 @@ const MenuItem = (props) => {
         styles.menuItemBox,
         { backgroundColor: ColorPalette.main.lightText_listItemsBackground },
       ]}
-      onLongPress={() => onDeleteMenuItem(menuItemObj.id)}
       onPress={() => onMenuItemDialog(menuItemObj.id)}
     >
       <View style={styles.innerContainer}>

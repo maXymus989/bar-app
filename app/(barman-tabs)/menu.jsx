@@ -34,7 +34,6 @@ const Menu = () => {
           <MenuItem
             menuItemObj={menuItem}
             key={key}
-            onDeleteMenuItem={removeMenuItem}
             onMenuItemDialog={openMenuItemDialog}
           />
         ))}
