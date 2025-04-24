@@ -1,11 +1,11 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Image } from "expo-image";
 import { Text } from "@rneui/base";
 import { ColorThemeContext } from "../app/index";
 
 const MenuItem = (props) => {
-  const { menuItemObj, onDeleteMenuItem, onMenuItemDialog } = props;
+  const { menuItemObj, onMenuItemDialog } = props;
 
   const ColorPalette = useContext(ColorThemeContext);
 

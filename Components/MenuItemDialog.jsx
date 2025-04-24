@@ -64,7 +64,7 @@ const MenuItemDialog = ({
       mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.8,
+      quality: 0.6,
     });
 
     console.log(result);
