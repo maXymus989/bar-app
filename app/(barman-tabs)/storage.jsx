@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, Text } from "react-native";
 import { FAB } from "@rneui/base";
 import { ColorThemeContext } from "../index";
 import StorageItem from "../../Components/StorageItem";
@@ -17,15 +17,15 @@ const Storage = () => {
     addStorageItem,
     updateStorageItem,
     removeStorageItem,
-    isLoaded,
-    fetchData,
+    isStorageLoaded,
+    fetchStorageData,
   } = useBarStore();
 
   useEffect(() => {
-    if (!isLoaded) {
-      fetchData();
+    if (!isStorageLoaded) {
+      fetchStorageData();
     }
-  }, [isLoaded]);
+  }, [isStorageLoaded]);
 
   const openStorageItemDialog = (storageItemId) => {
     setCurrentItemId(storageItemId);
@@ -40,7 +40,7 @@ const Storage = () => {
       }}
     >
       <ScrollView contentContainerStyle={styles.window}>
-        {!isLoaded ? (
+        {!isStorageLoaded ? (
           <Text
             style={{
               color: "white",

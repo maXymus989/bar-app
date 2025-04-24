@@ -7,13 +7,13 @@ import useBarStore from "../../state";
 const Orders = () => {
   const ColorPalette = useContext(ColorThemeContext);
 
-  const { orders, isLoaded, fetchData } = useBarStore();
+  const { orders, isOrdersLoaded, fetchOrdersData } = useBarStore();
 
   useEffect(() => {
-    if (!isLoaded) {
-      fetchData();
+    if (!isOrdersLoaded) {
+      fetchOrdersData();
     }
-  }, [isLoaded]);
+  }, [isOrdersLoaded]);
 
   return (
     <View
@@ -23,7 +23,7 @@ const Orders = () => {
       }}
     >
       <ScrollView contentContainerStyle={styles.window}>
-        {!isLoaded ? (
+        {!isOrdersLoaded ? (
           <Text
             style={{
               color: "white",

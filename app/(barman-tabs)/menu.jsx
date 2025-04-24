@@ -15,8 +15,8 @@ const Menu = () => {
     addMenuItem,
     updateMenuItem,
     removeMenuItem,
-    isLoaded,
-    fetchData,
+    isMenuLoaded,
+    fetchMenuData,
   } = useBarStore();
   const [currentItemId, setCurrentItemId] = useState("");
   useEffect(() => {
@@ -24,10 +24,10 @@ const Menu = () => {
   }, [menu]);
 
   useEffect(() => {
-    if (!isLoaded) {
-      fetchData();
+    if (!isMenuLoaded) {
+      fetchMenuData();
     }
-  }, [isLoaded]);
+  }, [isMenuLoaded]);
 
   const openMenuItemDialog = (menuItemId) => {
     setCurrentItemId(menuItemId);
@@ -43,7 +43,7 @@ const Menu = () => {
       }}
     >
       <ScrollView contentContainerStyle={styles.window}>
-        {!isLoaded ? (
+        {!isMenuLoaded ? (
           <Text
             style={{
               color: "white",
