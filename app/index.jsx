@@ -1,8 +1,9 @@
 import { createContext } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import { Button } from "@rneui/base";
 import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
+import "expo-router/entry";
 
 const ColorPalette = require("../assets/color_palette.json");
 const ColorThemeContext = createContext(ColorPalette);
@@ -15,6 +16,14 @@ const Index = () => {
   });
 
   const router = useRouter();
+
+  if (!loaded) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#ffffff" />
+      </View>
+    );
+  }
 
   return (
     <View
