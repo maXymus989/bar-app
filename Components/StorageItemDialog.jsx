@@ -321,6 +321,7 @@ const styles = StyleSheet.create({
     minHeight: 0,
     fontSize: 12,
     textAlign: "center",
+    color: "black",
   },
   checkbox: {
     backgroundColor: "white",

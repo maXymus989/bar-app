@@ -66,9 +66,16 @@ const Menu = () => {
 
       <FAB
         visible={true}
-        icon={{ name: "add" }}
+        title={"+"}
         color={ColorPalette.main.buttons_modalBackground}
         style={styles.FABStyle}
+        titleStyle={{
+          color: ColorPalette.main.darkText,
+          fontSize: 32,
+          fontFamily: "KyivTypeSerif-Heavy",
+          paddingVertical: 0,
+        }}
+        buttonStyle={{ height: 64 }}
         onPress={() => {
           setAddModalVisible(true);
         }}

@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     minHeight: 0,
     fontSize: 10,
     textAlign: "center",
+    color: "black",
   },
   checkbox: {
     backgroundColor: "white",

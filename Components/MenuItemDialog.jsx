@@ -141,6 +141,7 @@ const MenuItemDialog = ({
             backgroundColor: "white",
             fontFamily: "KyivTypeSerif-Heavy",
             fontSize: 14,
+            color: "black",
           }}
         />
 

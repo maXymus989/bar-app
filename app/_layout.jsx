@@ -7,9 +7,6 @@ SplashScreen.preventAutoHideAsync();
 const RootLayout = () => {
   useEffect(() => {
     const prepare = async () => {
-      // Тут ти можеш завантажити шрифти або інші ресурси
-
-      // ✅ Після всього — сховай splash
       await SplashScreen.hideAsync();
     };
 
@@ -25,7 +22,10 @@ const RootLayout = () => {
           statusBarBackgroundColor: "black",
         }}
       />
-      <Stack.Screen name="(barman-tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="(barman-tabs)"
+        options={{ headerShown: false, statusBarBackgroundColor: "black" }}
+      />
     </Stack>
   );
 };
