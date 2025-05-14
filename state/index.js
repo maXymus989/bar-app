@@ -24,7 +24,7 @@ const COLLECTIONS = {
 
 const loadCollection = async (name) => {
   const querySnapshot = await getDocs(collection(firestore, name));
-  return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  return querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 };
 
 const useBarStore = create((set, get) => ({
@@ -161,6 +161,7 @@ const useBarStore = create((set, get) => ({
     const itemSnap = await getDoc(itemRef);
 
     if (!itemSnap.exists()) {
+      console.log("Item snap doesn't exists!");
       return;
     }
 
