@@ -1,5 +1,11 @@
-import { useContext, useEffect } from "react";
-import { ScrollView, StyleSheet, View, Text } from "react-native";
+import { useContext, useEffect, useCallback, useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
 import { ColorThemeContext } from "../index";
 import Order from "../../Components/Order";
 import useBarStore from "../../state";
@@ -15,6 +21,16 @@ const Orders = () => {
     }
   }, [isOrdersLoaded]);
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 100);
+    fetchOrdersData();
+  }, []);
+
   return (
     <View
       style={{
@@ -22,17 +38,14 @@ const Orders = () => {
         flex: 1,
       }}
     >
-      <ScrollView contentContainerStyle={styles.window}>
+      <ScrollView
+        contentContainerStyle={styles.window}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {!isOrdersLoaded ? (
-          <Text
-            style={{
-              color: "white",
-              fontFamily: "KyivTypeSerif-Heavy",
-              fontSize: 20,
-            }}
-          >
-            Завантаження...
-          </Text>
+          <ActivityIndicator size="large" color={"white"} />
         ) : (
           orders.map((orderItem, key) => (
             <Order orderItemObj={orderItem} key={key} />

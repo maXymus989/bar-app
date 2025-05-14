@@ -1,5 +1,11 @@
-import { useContext, useState, useEffect } from "react";
-import { ScrollView, StyleSheet, View, Text } from "react-native";
+import { useContext, useState, useEffect, useCallback } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
 import { FAB } from "@rneui/base";
 import { ColorThemeContext } from "../index";
 import StorageItem from "../../Components/StorageItem";
@@ -32,6 +38,16 @@ const Storage = () => {
     setUpdateItemDialogVisible(true);
   };
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 100);
+    fetchStorageData();
+  }, []);
+
   return (
     <View
       style={{
@@ -39,17 +55,14 @@ const Storage = () => {
         flex: 1,
       }}
     >
-      <ScrollView contentContainerStyle={styles.window}>
+      <ScrollView
+        contentContainerStyle={styles.window}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {!isStorageLoaded ? (
-          <Text
-            style={{
-              color: "white",
-              fontFamily: "KyivTypeSerif-Heavy",
-              fontSize: 20,
-            }}
-          >
-            Завантаження...
-          </Text>
+          <ActivityIndicator size="large" color={"white"} />
         ) : (
           storage.map((storageItem, key) => (
             <StorageItem

@@ -1,5 +1,11 @@
-import { useContext, useState, useEffect } from "react";
-import { ScrollView, StyleSheet, View, Text } from "react-native";
+import { useContext, useState, useEffect, useCallback } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
 import { FAB } from "@rneui/base";
 import { ColorThemeContext } from "../index";
 import MenuItemDialog from "../../Components/MenuItemDialog";
@@ -19,12 +25,13 @@ const Menu = () => {
     fetchMenuData,
   } = useBarStore();
   const [currentItemId, setCurrentItemId] = useState("");
+
   useEffect(() => {
     console.log(menu);
   }, [menu]);
 
   useEffect(() => {
-    if (!isMenuLoaded) {
+    if (isMenuLoaded) {
       fetchMenuData();
     }
   }, [isMenuLoaded]);
@@ -35,6 +42,16 @@ const Menu = () => {
     console.log(menuItemId);
   };
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 100);
+    fetchMenuData();
+  }, []);
+
   return (
     <View
       style={{
@@ -42,17 +59,14 @@ const Menu = () => {
         flex: 1,
       }}
     >
-      <ScrollView contentContainerStyle={styles.window}>
+      <ScrollView
+        contentContainerStyle={styles.window}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {!isMenuLoaded ? (
-          <Text
-            style={{
-              color: "white",
-              fontFamily: "KyivTypeSerif-Heavy",
-              fontSize: 20,
-            }}
-          >
-            Завантаження...
-          </Text>
+          <ActivityIndicator size="large" color={"white"} />
         ) : (
           menu.map((menuItem, key) => (
             <MenuItem
