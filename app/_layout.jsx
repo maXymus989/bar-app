@@ -26,6 +26,10 @@ const RootLayout = () => {
         name="(barman-tabs)"
         options={{ headerShown: false, statusBarBackgroundColor: "black" }}
       />
+      <Stack.Screen
+        name="barmen_auth"
+        options={{ headerShown: false, statusBarBackgroundColor: "black" }}
+      />
     </Stack>
   );
 };

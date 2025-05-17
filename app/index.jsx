@@ -56,7 +56,7 @@ const Index = () => {
           }}
           containerStyle={styles.buttonContainer}
           onPress={() => {
-            router.push("/(barman-tabs)/orders");
+            router.push("/barmen_auth");
           }}
         />
         <Button
