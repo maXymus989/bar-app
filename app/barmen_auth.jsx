@@ -1,23 +1,74 @@
 import { useState, useContext, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
+import { router } from "expo-router";
 import { Input, Divider, Button } from "@rneui/base";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, firestore } from "../Firebase/firebaseConfig";
 import { ColorThemeContext } from "./index";
 import ConfirmDialog from "../Components/ConfirmDialog";
+import AlertDialog from "../Components/AlertDialog";
 
 const BarmenAuth = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [alertText, setAlertText] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
 
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
-  const [createNewUser, setCreateNewUser] = useState(false);
 
   const ColorPalette = useContext(ColorThemeContext);
 
   const dividerWidth = 20;
 
   useEffect(() => {
-    !confirmDialogVisible && createNewUser && console.log("New user created!");
-  }, [confirmDialogVisible]);
+    setEmail(`${username}@barapp.com`);
+  }, [username]);
+
+  const printAlert = (text) => {
+    setAlertText(text);
+    setShowAlert(true);
+  };
+
+  const handleRegister = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await setDoc(doc(firestore, "bars", username.toLowerCase()), {
+        createdAt: Date.now(),
+      });
+      printAlert("Обліковий запис успішно створено!");
+    } catch (registerError) {
+      printAlert("Помилка при створенні акаунта" + registerError);
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      router.push("/(barman-tabs)/orders");
+    } catch (error) {
+      if (error.code === "auth/invalid-credential") {
+        setConfirmDialogVisible(true);
+      } else {
+        printAlert("Інша помилка входу:" + error);
+      }
+    }
+  };
 
   return (
     <View
@@ -76,7 +127,7 @@ const BarmenAuth = () => {
         }}
         containerStyle={styles.buttonContainer}
         onPress={() => {
-          setConfirmDialogVisible(true);
+          handleLogin();
         }}
       />
 
@@ -89,7 +140,15 @@ const BarmenAuth = () => {
           }
           trueOptionText={"Так"}
           falseOptionText={"Ні"}
-          setOption={setCreateNewUser}
+          callback={handleRegister}
+        />
+      )}
+
+      {showAlert && (
+        <AlertDialog
+          visible={showAlert}
+          setVisible={setShowAlert}
+          alertText={alertText}
         />
       )}
     </View>

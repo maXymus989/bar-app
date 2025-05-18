@@ -14,6 +14,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 import { firestore, storage } from "../Firebase/firebaseConfig";
 
 const COLLECTIONS = {
@@ -22,8 +23,19 @@ const COLLECTIONS = {
   storage: "storage",
 };
 
+const getUserPath = () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (!user) throw new Error("Користувач не авторизований");
+  return `bars/${user.email.toLowerCase()}`;
+};
+
+const getCollection = (name) => {
+  return collection(firestore, `${getUserPath()}/${name}`);
+};
+
 const loadCollection = async (name) => {
-  const querySnapshot = await getDocs(collection(firestore, name));
+  const querySnapshot = await getDocs(getCollection(name));
   return querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 };
 
@@ -42,43 +54,37 @@ const useBarStore = create((set, get) => ({
       loadCollection(COLLECTIONS.orders),
       loadCollection(COLLECTIONS.storage),
     ]);
-
     set({ menu, orders, storage, isLoaded: true });
   },
 
   fetchMenuData: async () => {
     const menu = await loadCollection(COLLECTIONS.menu);
-
     set({ menu, isMenuLoaded: true });
   },
 
   fetchOrdersData: async () => {
     const orders = await loadCollection(COLLECTIONS.orders);
-
     set({ orders, isOrdersLoaded: true });
   },
 
   fetchStorageData: async () => {
     const storage = await loadCollection(COLLECTIONS.storage);
-
     set({ storage, isStorageLoaded: true });
   },
 
-  // Menu
   addMenuItem: async (item) => {
     try {
       let downloadURL = "";
       let storagePath = "";
       if (item.image) {
         const imageUri = item.image;
-
         const response = await fetch(imageUri);
         const blob = await response.blob();
 
         const imageName = `${Date.now()}_${Math.random()
           .toString(36)
           .substring(7)}.jpg`;
-        storagePath = `menu_images/${imageName}`;
+        storagePath = `${getUserPath()}/menu_images/${imageName}`;
         const imageRef = storageRef(storage, storagePath);
 
         await uploadBytes(imageRef, blob);
@@ -91,7 +97,7 @@ const useBarStore = create((set, get) => ({
         imagePath: storagePath,
       };
 
-      const docRef = doc(collection(firestore, COLLECTIONS.menu));
+      const docRef = doc(getCollection(COLLECTIONS.menu));
       await setDoc(docRef, finalItem);
 
       set((state) => ({
@@ -104,12 +110,9 @@ const useBarStore = create((set, get) => ({
 
   updateMenuItem: async (id, newData) => {
     try {
-      const itemRef = doc(firestore, COLLECTIONS.menu, id.toString());
+      const itemRef = doc(getCollection(COLLECTIONS.menu), id.toString());
       const itemSnap = await getDoc(itemRef);
-
-      if (!itemSnap.exists()) {
-        return;
-      }
+      if (!itemSnap.exists()) return;
 
       const oldData = itemSnap.data();
       let downloadURL = oldData.image;
@@ -131,7 +134,7 @@ const useBarStore = create((set, get) => ({
         const imageName = `${Date.now()}_${Math.random()
           .toString(36)
           .substring(7)}.jpg`;
-        storagePath = `menu_images/${imageName}`;
+        storagePath = `${getUserPath()}/menu_images/${imageName}`;
         const imageRef = storageRef(storage, storagePath);
 
         await uploadBytes(imageRef, blob);
@@ -145,7 +148,6 @@ const useBarStore = create((set, get) => ({
       };
 
       await updateDoc(itemRef, finalData);
-
       set((state) => ({
         menu: state.menu.map((item) =>
           item.id === id ? { ...item, ...finalData } : item
@@ -157,19 +159,13 @@ const useBarStore = create((set, get) => ({
   },
 
   removeMenuItem: async (id) => {
-    const itemRef = doc(firestore, COLLECTIONS.menu, id.toString());
+    const itemRef = doc(getCollection(COLLECTIONS.menu), id.toString());
     const itemSnap = await getDoc(itemRef);
-
-    if (!itemSnap.exists()) {
-      console.log("Item snap doesn't exists!");
-      return;
-    }
+    if (!itemSnap.exists()) return;
 
     const itemData = itemSnap.data();
-    const imagePath = itemData.imagePath;
-
-    if (imagePath) {
-      const imageRef = storageRef(storage, imagePath);
+    if (itemData.imagePath) {
+      const imageRef = storageRef(storage, itemData.imagePath);
       try {
         await deleteObject(imageRef);
       } catch (error) {
@@ -182,9 +178,8 @@ const useBarStore = create((set, get) => ({
     }));
   },
 
-  // Storage
   addStorageItem: async (item) => {
-    const docRef = doc(collection(firestore, COLLECTIONS.storage));
+    const docRef = doc(getCollection(COLLECTIONS.storage));
     await setDoc(docRef, item);
     set((state) => ({
       storage: [...state.storage, { id: docRef.id, ...item }],
@@ -193,7 +188,7 @@ const useBarStore = create((set, get) => ({
 
   updateStorageItem: async (id, newData) => {
     await updateDoc(
-      doc(firestore, COLLECTIONS.storage, id.toString()),
+      doc(getCollection(COLLECTIONS.storage), id.toString()),
       newData
     );
     set((state) => ({
@@ -204,7 +199,7 @@ const useBarStore = create((set, get) => ({
   },
 
   removeStorageItem: async (id) => {
-    await deleteDoc(doc(firestore, COLLECTIONS.storage, id.toString()));
+    await deleteDoc(doc(getCollection(COLLECTIONS.storage), id.toString()));
     set((state) => ({
       storage: state.storage.filter((item) => item.id !== id),
     }));

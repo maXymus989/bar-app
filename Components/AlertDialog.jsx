@@ -1,7 +1,12 @@
 import { Text } from "react-native";
 import { Dialog } from "@rneui/base";
 
-const AlertDialog = ({ visible, setVisible, alertTitle, alertText }) => {
+const AlertDialog = ({
+  visible,
+  setVisible,
+  alertText,
+  alertTitle = "Попередження",
+}) => {
   return (
     <Dialog
       isVisible={visible}

@@ -9,7 +9,7 @@ const ConfirmDialog = ({
   confirmationText,
   trueOptionText,
   falseOptionText,
-  setOption,
+  callback,
 }) => {
   const ColorPalette = useContext(ColorThemeContext);
   return (
@@ -43,7 +43,7 @@ const ConfirmDialog = ({
           }}
           containerStyle={styles.buttonContainer}
           onPress={() => {
-            setOption(true);
+            callback();
             setVisible(false);
           }}
         />
@@ -59,7 +59,6 @@ const ConfirmDialog = ({
           }}
           containerStyle={styles.buttonContainer}
           onPress={() => {
-            setOption(false);
             setVisible(false);
           }}
         />
