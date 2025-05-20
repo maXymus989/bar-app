@@ -43,7 +43,7 @@ const BarmenAuth = () => {
         password
       );
 
-      await setDoc(doc(firestore, "bars", username.toLowerCase()), {
+      await setDoc(doc(firestore, "bars", email.toLowerCase()), {
         createdAt: Date.now(),
       });
       printAlert("Обліковий запис успішно створено!");

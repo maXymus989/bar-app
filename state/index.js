@@ -104,6 +104,7 @@ const useBarStore = create((set, get) => ({
         menu: [...state.menu, { ...finalItem, id: docRef.id }],
       }));
     } catch (error) {
+      console.log(getUserPath());
       console.error(error);
     }
   },
