@@ -12,6 +12,9 @@ const RootLayout = () => {
 
     prepare();
   }, []);
+
+  const screenStyle = { headerShown: false, statusBarBackgroundColor: "black" };
+
   return (
     <Stack>
       <Stack.Screen
@@ -22,14 +25,10 @@ const RootLayout = () => {
           statusBarBackgroundColor: "black",
         }}
       />
-      <Stack.Screen
-        name="(barman-tabs)"
-        options={{ headerShown: false, statusBarBackgroundColor: "black" }}
-      />
-      <Stack.Screen
-        name="barmen_auth"
-        options={{ headerShown: false, statusBarBackgroundColor: "black" }}
-      />
+      <Stack.Screen name="(barman-tabs)" options={screenStyle} />
+      <Stack.Screen name="barmen_auth" options={screenStyle} />
+      <Stack.Screen name="guest_name_page" options={screenStyle} />
+      <Stack.Screen name="guest" options={screenStyle} />
     </Stack>
   );
 };

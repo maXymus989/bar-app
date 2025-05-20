@@ -39,7 +39,7 @@ const loadCollection = async (name) => {
   return querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 };
 
-const useBarStore = create((set, get) => ({
+const useBarStore = create((set) => ({
   menu: [],
   orders: [],
   storage: [],
@@ -47,6 +47,12 @@ const useBarStore = create((set, get) => ({
   isMenuLoaded: false,
   isOrdersLoaded: false,
   isStorageLoaded: false,
+
+  guestUsername: "",
+
+  setGuestUsername: (newUsername) => {
+    set({ guestUsername: newUsername });
+  },
 
   fetchData: async () => {
     const [menu, orders, storage] = await Promise.all([

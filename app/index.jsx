@@ -70,6 +70,7 @@ const Index = () => {
             fontSize: 30,
           }}
           containerStyle={styles.buttonContainer}
+          onPress={() => router.push("/guest_name_page")}
         />
       </View>
     </View>
