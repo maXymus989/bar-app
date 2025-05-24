@@ -27,7 +27,7 @@ const Menu = () => {
   const [currentItemId, setCurrentItemId] = useState("");
 
   useEffect(() => {
-    if (isMenuLoaded) {
+    if (!isMenuLoaded) {
       fetchMenuData();
     }
   }, [isMenuLoaded]);
