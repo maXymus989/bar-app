@@ -27,10 +27,6 @@ const Menu = () => {
   const [currentItemId, setCurrentItemId] = useState("");
 
   useEffect(() => {
-    console.log(menu);
-  }, [menu]);
-
-  useEffect(() => {
     if (isMenuLoaded) {
       fetchMenuData();
     }
