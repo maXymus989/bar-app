@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { router } from "expo-router";
 import { Input, Divider, Button } from "@rneui/base";
