@@ -23,23 +23,28 @@ const COLLECTIONS = {
   storage: "storage",
 };
 
-const getUserPath = () => {
+const getUserPath = (barmanEmail) => {
+  if (barmanEmail) {
+    return `bars/${barmanEmail.toLowerCase()}`;
+  }
+
   const auth = getAuth();
   const user = auth.currentUser;
-  if (!user) throw new Error("Користувач не авторизований");
+  if (!user) throw new Error("User is not authorized!");
   return `bars/${user.email.toLowerCase()}`;
 };
 
-const getCollection = (name) => {
-  return collection(firestore, `${getUserPath()}/${name}`);
+const getCollection = (name, userPath) => {
+  if (!userPath) throw new Error("getCollection: userPath is undefined");
+  return collection(firestore, `${userPath}/${name}`);
 };
 
-const loadCollection = async (name) => {
-  const querySnapshot = await getDocs(getCollection(name));
+const loadCollection = async (name, userPath) => {
+  const querySnapshot = await getDocs(getCollection(name, userPath));
   return querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 };
 
-const useBarStore = create((set) => ({
+const useBarStore = create((set, get) => ({
   menu: [],
   orders: [],
   storage: [],
@@ -49,33 +54,52 @@ const useBarStore = create((set) => ({
   isStorageLoaded: false,
 
   guestUsername: "",
+  barmanEmail: "",
 
-  setGuestUsername: (newUsername) => {
-    set({ guestUsername: newUsername });
-  },
-
-  fetchData: async () => {
-    const [menu, orders, storage] = await Promise.all([
-      loadCollection(COLLECTIONS.menu),
-      loadCollection(COLLECTIONS.orders),
-      loadCollection(COLLECTIONS.storage),
-    ]);
-    set({ menu, orders, storage, isLoaded: true });
+  setGuest: (guestUsername, barmanUsername) => {
+    set({
+      guestUsername,
+      barmanEmail: barmanUsername + "@barapp.com",
+    });
   },
 
   fetchMenuData: async () => {
-    const menu = await loadCollection(COLLECTIONS.menu);
-    set({ menu, isMenuLoaded: true });
+    try {
+      const { barmanEmail } = get();
+      const menu = await loadCollection(
+        COLLECTIONS.menu,
+        getUserPath(barmanEmail)
+      );
+      set({ menu, isMenuLoaded: true });
+    } catch (e) {
+      console.error("Failed to fetch menu:", e);
+    }
   },
 
   fetchOrdersData: async () => {
-    const orders = await loadCollection(COLLECTIONS.orders);
-    set({ orders, isOrdersLoaded: true });
+    try {
+      const { barmanEmail } = get();
+      const orders = await loadCollection(
+        COLLECTIONS.orders,
+        getUserPath(barmanEmail)
+      );
+      set({ orders, isOrdersLoaded: true });
+    } catch (e) {
+      console.error("Failed to fetch orders:", e);
+    }
   },
 
   fetchStorageData: async () => {
-    const storage = await loadCollection(COLLECTIONS.storage);
-    set({ storage, isStorageLoaded: true });
+    try {
+      const { barmanEmail } = get();
+      const storage = await loadCollection(
+        COLLECTIONS.storage,
+        getUserPath(barmanEmail)
+      );
+      set({ storage, isStorageLoaded: true });
+    } catch (e) {
+      console.error("Failed to fetch storage:", e);
+    }
   },
 
   addMenuItem: async (item) => {
