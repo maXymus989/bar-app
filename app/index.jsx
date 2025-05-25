@@ -1,9 +1,11 @@
-import { createContext } from "react";
+import { createContext, useCallback } from "react";
 import { Text, View, StyleSheet, ActivityIndicator } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { Button } from "@rneui/base";
 import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
 import "expo-router/entry";
+import useBarStore from "../state";
 
 const ColorPalette = require("../assets/color_palette.json");
 const ColorThemeContext = createContext(ColorPalette);
@@ -16,6 +18,13 @@ const Index = () => {
   });
 
   const router = useRouter();
+  const { clearAll } = useBarStore();
+
+  useFocusEffect(
+    useCallback(() => {
+      clearAll();
+    }, [])
+  );
 
   if (!loaded) {
     return (
