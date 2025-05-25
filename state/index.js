@@ -45,10 +45,11 @@ const loadCollection = async (name, userPath) => {
 };
 
 const useBarStore = create((set, get) => ({
+  rooms: [],
   menu: [],
   orders: [],
   storage: [],
-  isLoaded: false,
+  areRoomsLoaded: false,
   isMenuLoaded: false,
   isOrdersLoaded: false,
   isStorageLoaded: false,
@@ -57,18 +58,19 @@ const useBarStore = create((set, get) => ({
   barmanEmail: "",
 
   setGuest: (guestUsername, barmanUsername) => {
+    console.log(barmanUsername);
     set({
       guestUsername,
       barmanEmail: barmanUsername + "@barapp.com",
     });
   },
 
-  fetchMenuData: async () => {
+  fetchMenuData: async (guestRequest = false) => {
     try {
       const { barmanEmail } = get();
       const menu = await loadCollection(
         COLLECTIONS.menu,
-        getUserPath(barmanEmail)
+        getUserPath(guestRequest ? barmanEmail : "")
       );
       set({ menu, isMenuLoaded: true });
     } catch (e) {
@@ -76,12 +78,12 @@ const useBarStore = create((set, get) => ({
     }
   },
 
-  fetchOrdersData: async () => {
+  fetchOrdersData: async (guestRequest = false) => {
     try {
       const { barmanEmail } = get();
       const orders = await loadCollection(
         COLLECTIONS.orders,
-        getUserPath(barmanEmail)
+        getUserPath(guestRequest ? barmanEmail : "")
       );
       set({ orders, isOrdersLoaded: true });
     } catch (e) {
@@ -89,16 +91,29 @@ const useBarStore = create((set, get) => ({
     }
   },
 
-  fetchStorageData: async () => {
+  fetchStorageData: async (guestRequest = false) => {
     try {
       const { barmanEmail } = get();
       const storage = await loadCollection(
         COLLECTIONS.storage,
-        getUserPath(barmanEmail)
+        getUserPath(guestRequest ? barmanEmail : "")
       );
       set({ storage, isStorageLoaded: true });
     } catch (e) {
       console.error("Failed to fetch storage:", e);
+    }
+  },
+
+  fetchRooms: async () => {
+    try {
+      const barsCollection = collection(firestore, "bars");
+      const querySnapshot = await getDocs(barsCollection);
+      set({
+        rooms: querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })),
+        areRoomsLoaded: true,
+      });
+    } catch (e) {
+      console.error("Failed to fetch rooms:", e);
     }
   },
 
@@ -114,7 +129,7 @@ const useBarStore = create((set, get) => ({
         const imageName = `${Date.now()}_${Math.random()
           .toString(36)
           .substring(7)}.jpg`;
-        storagePath = `${getUserPath()}/menu_images/${imageName}`;
+        storagePath = `${getUserPath("")}/menu_images/${imageName}`;
         const imageRef = storageRef(storage, storagePath);
 
         await uploadBytes(imageRef, blob);
@@ -127,21 +142,39 @@ const useBarStore = create((set, get) => ({
         imagePath: storagePath,
       };
 
-      const docRef = doc(getCollection(COLLECTIONS.menu));
+      const docRef = doc(getCollection(COLLECTIONS.menu, getUserPath("")));
       await setDoc(docRef, finalItem);
 
       set((state) => ({
         menu: [...state.menu, { ...finalItem, id: docRef.id }],
       }));
     } catch (error) {
-      console.log(getUserPath());
       console.error(error);
     }
   },
 
+  clearAll: () => {
+    set({
+      rooms: [],
+      menu: [],
+      orders: [],
+      storage: [],
+      areRoomsLoaded: false,
+      isMenuLoaded: false,
+      isOrdersLoaded: false,
+      isStorageLoaded: false,
+
+      guestUsername: "",
+      barmanEmail: "",
+    });
+  },
+
   updateMenuItem: async (id, newData) => {
     try {
-      const itemRef = doc(getCollection(COLLECTIONS.menu), id.toString());
+      const itemRef = doc(
+        getCollection(COLLECTIONS.menu, getUserPath("")),
+        id.toString()
+      );
       const itemSnap = await getDoc(itemRef);
       if (!itemSnap.exists()) return;
 
@@ -165,7 +198,7 @@ const useBarStore = create((set, get) => ({
         const imageName = `${Date.now()}_${Math.random()
           .toString(36)
           .substring(7)}.jpg`;
-        storagePath = `${getUserPath()}/menu_images/${imageName}`;
+        storagePath = `${getUserPath("")}/menu_images/${imageName}`;
         const imageRef = storageRef(storage, storagePath);
 
         await uploadBytes(imageRef, blob);
@@ -190,7 +223,10 @@ const useBarStore = create((set, get) => ({
   },
 
   removeMenuItem: async (id) => {
-    const itemRef = doc(getCollection(COLLECTIONS.menu), id.toString());
+    const itemRef = doc(
+      getCollection(COLLECTIONS.menu, getUserPath("")),
+      id.toString()
+    );
     const itemSnap = await getDoc(itemRef);
     if (!itemSnap.exists()) return;
 
@@ -210,7 +246,7 @@ const useBarStore = create((set, get) => ({
   },
 
   addStorageItem: async (item) => {
-    const docRef = doc(getCollection(COLLECTIONS.storage));
+    const docRef = doc(getCollection(COLLECTIONS.storage, getUserPath("")));
     await setDoc(docRef, item);
     set((state) => ({
       storage: [...state.storage, { id: docRef.id, ...item }],
@@ -219,7 +255,7 @@ const useBarStore = create((set, get) => ({
 
   updateStorageItem: async (id, newData) => {
     await updateDoc(
-      doc(getCollection(COLLECTIONS.storage), id.toString()),
+      doc(getCollection(COLLECTIONS.storage, getUserPath("")), id.toString()),
       newData
     );
     set((state) => ({
@@ -230,7 +266,9 @@ const useBarStore = create((set, get) => ({
   },
 
   removeStorageItem: async (id) => {
-    await deleteDoc(doc(getCollection(COLLECTIONS.storage), id.toString()));
+    await deleteDoc(
+      doc(getCollection(COLLECTIONS.storage, getUserPath("")), id.toString())
+    );
     set((state) => ({
       storage: state.storage.filter((item) => item.id !== id),
     }));

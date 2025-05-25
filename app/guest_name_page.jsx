@@ -1,6 +1,8 @@
-import { useState, useContext } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { useState, useContext, useEffect } from "react";
+import { StyleSheet, Text } from "react-native";
 import { router } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import DropDownPicker from "react-native-dropdown-picker";
 import { Input, Divider, Button } from "@rneui/base";
 import { ColorThemeContext } from "./index";
 import AlertDialog from "../Components/AlertDialog";
@@ -12,16 +14,34 @@ const GuestNamePage = () => {
   const [alertText, setAlertText] = useState("");
   const [showAlert, setShowAlert] = useState(false);
 
+  const [roomNames, setRoomNames] = useState([]);
+  const [selectedRoomName, setSelectedRoomName] = useState("");
+
+  const [pickerOpened, setPickerOpened] = useState(false);
+
   const ColorPalette = useContext(ColorThemeContext);
 
   const dividerWidth = 20;
 
-  const { setGuestUsername } = useBarStore();
+  const { setGuest, rooms, areRoomsLoaded, fetchRooms } = useBarStore();
 
   const printAlert = (text) => {
     setAlertText(text);
     setShowAlert(true);
   };
+
+  useEffect(() => {
+    setRoomNames(
+      rooms.map(({ id }) => {
+        const newId = id.replace("@barapp.com", "");
+        return { label: newId, value: newId };
+      })
+    );
+  }, [rooms]);
+
+  useEffect(() => {
+    fetchRooms();
+  }, [!areRoomsLoaded]);
 
   const isValidName = (name) => {
     if (typeof name !== "string") return false;
@@ -36,7 +56,7 @@ const GuestNamePage = () => {
   };
 
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.window,
         { backgroundColor: ColorPalette.main.background_modalButtons },
@@ -65,6 +85,34 @@ const GuestNamePage = () => {
         placeholder="Ваше ім'я"
       />
 
+      <Divider width={dividerWidth * 2} />
+
+      <DropDownPicker
+        listMode="FLATLIST"
+        open={pickerOpened}
+        value={selectedRoomName}
+        items={roomNames}
+        setOpen={setPickerOpened}
+        setValue={setSelectedRoomName}
+        setItems={setRoomNames}
+        textStyle={{ fontSize: 18, fontFamily: "KyivTypeSerif-Heavy" }}
+        arrowIconStyle={{ width: 10 }}
+        placeholder={"Оберіть кімнату"}
+        style={[
+          styles.dropDownStyle,
+          {
+            backgroundColor: ColorPalette.main.grey,
+          },
+        ]}
+        dropDownContainerStyle={[
+          styles.dropDownStyle,
+          {
+            backgroundColor: ColorPalette.main.grey,
+            borderWidth: 1,
+          },
+        ]}
+      />
+
       <Divider width={dividerWidth * 4} />
 
       <Button
@@ -79,8 +127,8 @@ const GuestNamePage = () => {
         }}
         containerStyle={styles.buttonContainer}
         onPress={() => {
-          if (isValidName(username)) {
-            setGuestUsername(username);
+          if (isValidName(username) && selectedRoomName) {
+            setGuest(username, selectedRoomName);
             router.push("/guest");
           } else {
             printAlert("Неправильний формат введення імені!");
@@ -95,7 +143,7 @@ const GuestNamePage = () => {
           alertText={alertText}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -142,5 +190,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.58,
     shadowRadius: 16.0,
     elevation: 24,
+  },
+  dropDownStyle: {
+    width: "80%",
+    marginLeft: "10%",
   },
 });
