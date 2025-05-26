@@ -35,6 +35,23 @@ const BarmenAuth = () => {
     setShowAlert(true);
   };
 
+  const isValidAuth = (username, password) => {
+    const checkString = (str, minLength = 3) => {
+      if (typeof str !== "string") return false;
+
+      str = str.trim();
+
+      if (str.length < minLength || str.length > 20) return false;
+
+      const nameRegex = /^[A-Za-z]+$/u;
+
+      return nameRegex.test(str);
+    };
+
+    if (checkString(username) && checkString(password, 6)) return true;
+    else return false;
+  };
+
   const handleRegister = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -127,7 +144,10 @@ const BarmenAuth = () => {
         }}
         containerStyle={styles.buttonContainer}
         onPress={() => {
-          handleLogin();
+          if (isValidAuth(username, password)) handleLogin();
+          else {
+            printAlert("Дані авторизації вказані неправильно!");
+          }
         }}
       />
 
