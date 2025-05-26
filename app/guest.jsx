@@ -1,98 +1,126 @@
 import { useState, useContext, useEffect } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import { Image } from "expo-image";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@rneui/base";
 import { ColorThemeContext } from "./index";
+import useBoundedIndex from "../hooks/useBoundedIndex";
+import useBarStore from "../state";
 
 const Guest = () => {
   const ColorPalette = useContext(ColorThemeContext);
   const textColor = { color: ColorPalette.main.darkText };
-  const image = "";
-  const name = "Назва";
+  const { menu, isMenuLoaded, fetchMenuData } = useBarStore();
+
+  const { index, next, prev, setMax } = useBoundedIndex(0, menu.length - 1);
+
+  useEffect(() => {
+    setMax(menu.length - 1);
+  }, [menu]);
+
+  useEffect(() => {
+    if (!isMenuLoaded) {
+      try {
+        fetchMenuData(true);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }, [isMenuLoaded]);
 
   return (
-    <View
+    <SafeAreaView
       style={[
         styles.window,
         { backgroundColor: ColorPalette.main.background_modalButtons },
       ]}
     >
-      <Text
-        style={[
-          styles.headerText,
-          {
-            color: ColorPalette.main.lightText_listItemsBackground,
-          },
-        ]}
-      >
-        Оберіть напій
-      </Text>
-      <View style={styles.buttonsAndIconContainer}>
-        <Button
-          icon={
-            <Image
-              source={require("../assets/left-arrow.svg")}
-              style={{ width: 50, height: 50 }}
+      {!isMenuLoaded ? (
+        <ActivityIndicator size="large" color={"white"} />
+      ) : (
+        <>
+          <Text
+            style={[
+              styles.headerText,
+              {
+                color: ColorPalette.main.lightText_listItemsBackground,
+              },
+            ]}
+          >
+            Оберіть напій
+          </Text>
+          <View style={styles.buttonsAndIconContainer}>
+            <Button
+              icon={
+                <Image
+                  source={require("../assets/left-arrow.svg")}
+                  style={{ width: 50, height: 50 }}
+                />
+              }
+              iconContainerStyle={{ marginRight: 10 }}
+              buttonStyle={{
+                backgroundColor: "transparent",
+                borderColor: "transparent",
+                borderWidth: 0,
+              }}
+              onPress={prev}
             />
-          }
-          iconContainerStyle={{ marginRight: 10 }}
-          buttonStyle={{
-            backgroundColor: "transparent",
-            borderColor: "transparent",
-            borderWidth: 0,
-          }}
-        />
-        {image ? (
-          <Image
-            style={styles.photoContainer}
-            source={image}
-            contentFit="cover"
-            transition={1000}
-          />
-        ) : (
-          <View style={[{ backgroundColor: "white" }, styles.photoContainer]}>
-            <Text style={[styles.text, textColor]}>Німа фото</Text>
+            {menu[index].image ? (
+              <Image
+                style={styles.photoContainer}
+                source={menu[index].image}
+                contentFit="cover"
+                transition={1000}
+              />
+            ) : (
+              <View
+                style={[{ backgroundColor: "white" }, styles.photoContainer]}
+              >
+                <Text style={[styles.text, textColor]}>Німа фото</Text>
+              </View>
+            )}
+            <Button
+              icon={
+                <Image
+                  source={require("../assets/right-arrow.svg")}
+                  style={{ width: 50, height: 50 }}
+                />
+              }
+              iconContainerStyle={{ marginRight: 10 }}
+              buttonStyle={{
+                backgroundColor: "transparent",
+                borderColor: "transparent",
+                borderWidth: 0,
+              }}
+              onPress={next}
+            />
           </View>
-        )}
-        <Button
-          icon={
-            <Image
-              source={require("../assets/right-arrow.svg")}
-              style={{ width: 50, height: 50 }}
-            />
-          }
-          iconContainerStyle={{ marginRight: 10 }}
-          buttonStyle={{
-            backgroundColor: "transparent",
-            borderColor: "transparent",
-            borderWidth: 0,
-          }}
-        />
-      </View>
-      <Text
-        style={[
-          styles.beverageName,
-          {
-            color: ColorPalette.main.lightText_listItemsBackground,
-          },
-        ]}
-      >
-        {name}
-      </Text>
-      <Button
-        title={"Обрати"}
-        buttonStyle={{
-          backgroundColor: ColorPalette.main.buttons_modalBackground,
-        }}
-        titleStyle={{
-          color: ColorPalette.main.darkText,
-          fontFamily: "KyivTypeSerif-Heavy",
-          fontSize: 24,
-        }}
-        containerStyle={styles.buttonContainer}
-        onPress={() => {}}
-      />
-    </View>
+          <Text
+            style={[
+              styles.beverageName,
+              {
+                color: ColorPalette.main.lightText_listItemsBackground,
+              },
+            ]}
+          >
+            {menu[index].name}
+          </Text>
+          <Button
+            title={"Обрати"}
+            buttonStyle={{
+              backgroundColor: ColorPalette.main.buttons_modalBackground,
+            }}
+            titleStyle={{
+              color: ColorPalette.main.darkText,
+              fontFamily: "KyivTypeSerif-Heavy",
+              fontSize: 24,
+            }}
+            containerStyle={styles.buttonContainer}
+            onPress={() => {}}
+          />
+        </>
+      )}
+    </SafeAreaView>
   );
 };
 
