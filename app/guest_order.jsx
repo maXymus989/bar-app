@@ -64,7 +64,7 @@ const GuestOrder = () => {
   useEffect(() => {
     setTextPrice(
       data.minPrice === data.maxPrice
-        ? parseFloat(data.minPrice)
+        ? parseFloat(data.minPrice) + " грн"
         : data.minPrice + " - " + data.maxPrice + " грн"
     );
   }, [data.minPrice]);
