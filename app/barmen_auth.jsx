@@ -43,7 +43,7 @@ const BarmenAuth = () => {
 
       if (str.length < minLength || str.length > 20) return false;
 
-      const nameRegex = /^[A-Za-z]+$/u;
+      const nameRegex = /^[A-Za-z0-9]+$/u;
 
       return nameRegex.test(str);
     };
