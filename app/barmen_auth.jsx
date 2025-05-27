@@ -64,8 +64,10 @@ const BarmenAuth = () => {
         createdAt: Date.now(),
       });
       printAlert("Обліковий запис успішно створено!");
-    } catch (registerError) {
-      printAlert("Помилка при створенні акаунта" + registerError);
+    } catch (error) {
+      if (error.code === "auth/email-already-in-use")
+        printAlert("Цей користувач вже існує!");
+      else printAlert("Помилка при створенні акаунта" + error);
     }
   };
 
@@ -156,7 +158,7 @@ const BarmenAuth = () => {
           visible={confirmDialogVisible}
           setVisible={setConfirmDialogVisible}
           confirmationText={
-            "Акаунт з цим іменем поки не існує. Створити новий?"
+            "Невірні логін та/або пароль.\nСпробувати створити новий обліковий запис?"
           }
           trueOptionText={"Так"}
           falseOptionText={"Ні"}
