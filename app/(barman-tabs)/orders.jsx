@@ -15,13 +15,14 @@ const Orders = () => {
 
   const { orders, isOrdersLoaded, fetchOrdersData } = useBarStore();
 
+  const [refreshing, setRefreshing] = useState(false);
+  const [sortedOrders, setSortedOrders] = useState([]);
+
   useEffect(() => {
     if (!isOrdersLoaded) {
       fetchOrdersData();
     }
   }, [isOrdersLoaded]);
-
-  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -30,6 +31,16 @@ const Orders = () => {
     }, 100);
     fetchOrdersData();
   }, []);
+
+  useEffect(() => {
+    setSortedOrders(
+      [...orders].sort((a, b) => {
+        const dateA = new Date(`${a.date} ${a.time}`);
+        const dateB = new Date(`${b.date} ${b.time}`);
+        return dateB - dateA;
+      })
+    );
+  }, [orders]);
 
   return (
     <View
@@ -47,7 +58,7 @@ const Orders = () => {
         {!isOrdersLoaded ? (
           <ActivityIndicator size="large" color={"white"} />
         ) : (
-          orders.map((orderItem, key) => (
+          sortedOrders.map((orderItem, key) => (
             <Order orderItemObj={orderItem} key={key} />
           ))
         )}
