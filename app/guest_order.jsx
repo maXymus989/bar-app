@@ -52,6 +52,7 @@ const GuestOrder = () => {
   const onAddOrder = () => {
     const now = new Date();
     addOrder({
+      id: Date.now(),
       orderName: menu[index].name,
       date: now.toISOString().split("T")[0],
       time: now.toTimeString().split(" ")[0],
