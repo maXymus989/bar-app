@@ -1,6 +1,7 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "@rneui/base";
 import { ColorThemeContext } from "./index";
@@ -23,7 +24,7 @@ const Guest = () => {
       try {
         fetchMenuData(true);
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
     }
   }, [isMenuLoaded]);
@@ -116,7 +117,9 @@ const Guest = () => {
               fontSize: 24,
             }}
             containerStyle={styles.buttonContainer}
-            onPress={() => {}}
+            onPress={() =>
+              router.push({ pathname: "/guest_order", params: { index } })
+            }
           />
         </>
       )}

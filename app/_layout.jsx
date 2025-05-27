@@ -17,18 +17,12 @@ const RootLayout = () => {
 
   return (
     <Stack>
-      <Stack.Screen
-        name="index"
-        options={{
-          title: "Home",
-          headerShown: false,
-          statusBarBackgroundColor: "black",
-        }}
-      />
+      <Stack.Screen name="index" options={screenStyle} />
       <Stack.Screen name="(barman-tabs)" options={screenStyle} />
       <Stack.Screen name="barmen_auth" options={screenStyle} />
       <Stack.Screen name="guest_name_page" options={screenStyle} />
       <Stack.Screen name="guest" options={screenStyle} />
+      <Stack.Screen name="guest_order" options={screenStyle} />
     </Stack>
   );
 };

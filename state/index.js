@@ -245,6 +245,11 @@ const useBarStore = create((set, get) => ({
     }));
   },
 
+  addOrder: async (item) => {
+    const docRef = doc(getCollection(COLLECTIONS.orders, getUserPath("")));
+    await setDoc(docRef, item);
+  },
+
   addStorageItem: async (item) => {
     const docRef = doc(getCollection(COLLECTIONS.storage, getUserPath("")));
     await setDoc(docRef, item);
