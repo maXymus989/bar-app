@@ -250,6 +250,15 @@ const useBarStore = create((set, get) => ({
     await setDoc(docRef, item);
   },
 
+  removeOrder: async (id) => {
+    await deleteDoc(
+      doc(getCollection(COLLECTIONS.orders, getUserPath("")), id.toString())
+    );
+    set((state) => ({
+      orders: state.orders.filter((item) => item.id !== id),
+    }));
+  },
+
   addStorageItem: async (item) => {
     const docRef = doc(getCollection(COLLECTIONS.storage, getUserPath("")));
     await setDoc(docRef, item);

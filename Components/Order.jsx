@@ -1,21 +1,22 @@
 import { useContext } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Text } from "@rneui/base";
 import { ColorThemeContext } from "../app/index";
 
 const Order = (props) => {
-  const { orderItemObj } = props;
+  const { orderItemObj, deleteCallback } = props;
 
   const ColorPalette = useContext(ColorThemeContext);
 
   const fontName = "KyivTypeSerif-Heavy";
 
   return (
-    <View
+    <Pressable
       style={[
         styles.orderBox,
         { backgroundColor: ColorPalette.main.lightText_listItemsBackground },
       ]}
+      onLongPress={() => deleteCallback(orderItemObj.id)}
     >
       <View style={styles.innerContainer}>
         <View style={styles.orderNameAndDateView}>
@@ -34,7 +35,7 @@ const Order = (props) => {
           {"Замовник: " + orderItemObj.clientName}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

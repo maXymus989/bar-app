@@ -13,7 +13,8 @@ import useBarStore from "../../state";
 const Orders = () => {
   const ColorPalette = useContext(ColorThemeContext);
 
-  const { orders, isOrdersLoaded, fetchOrdersData } = useBarStore();
+  const { orders, isOrdersLoaded, fetchOrdersData, removeOrder } =
+    useBarStore();
 
   const [refreshing, setRefreshing] = useState(false);
   const [sortedOrders, setSortedOrders] = useState([]);
@@ -59,7 +60,11 @@ const Orders = () => {
           <ActivityIndicator size="large" color={"white"} />
         ) : (
           sortedOrders.map((orderItem, key) => (
-            <Order orderItemObj={orderItem} key={key} />
+            <Order
+              orderItemObj={orderItem}
+              key={key}
+              deleteCallback={removeOrder}
+            />
           ))
         )}
       </ScrollView>
