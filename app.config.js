@@ -1,16 +1,18 @@
 export default () => ({
   expo: {
-    name: "bar-app",
+    name: "Притулок бармена",
     slug: "bar-app",
     version: "1.0.0",
     orientation: "portrait",
     userInterfaceStyle: "dark",
+    icon: "./assets/adaptive-icon.png",
     newArchEnabled: true,
     ios: {
       supportsTablet: true,
     },
     android: {
       package: "com.maxymus989.barapp",
+      permissions: ["FOREGROUND_SERVICE"],
       adaptiveIcon: {
         backgroundColor: "#ffffff",
       },
@@ -22,7 +24,7 @@ export default () => ({
       [
         "expo-splash-screen",
         {
-          image: "./assets/pngwing.png",
+          image: "./assets/adaptive-icon.png",
           resizeMode: "contain",
           backgroundColor: "#ffffff",
         },
