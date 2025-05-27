@@ -246,8 +246,15 @@ const useBarStore = create((set, get) => ({
   },
 
   addOrder: async (item) => {
-    const docRef = doc(getCollection(COLLECTIONS.orders, getUserPath("")));
-    await setDoc(docRef, item);
+    const { barmanEmail } = get();
+    try {
+      const docRef = doc(
+        getCollection(COLLECTIONS.orders, getUserPath(barmanEmail))
+      );
+      await setDoc(docRef, item);
+    } catch (e) {
+      console.error(e);
+    }
   },
 
   removeOrder: async (id) => {
