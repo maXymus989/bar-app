@@ -7,6 +7,8 @@ import {
     updateDoc,
     deleteDoc,
     getDoc,
+    query,
+    where,
 } from 'firebase/firestore';
 import {
     ref as storageRef,
@@ -39,8 +41,18 @@ const getCollection = (name, userPath) => {
     return collection(firestore, `${userPath}/${name}`);
 };
 
-const loadCollection = async (name, userPath) => {
-    const querySnapshot = await getDocs(getCollection(name, userPath));
+// filters = [{ field: 'visible', op: '==', value: true }]
+const loadCollection = async (name, userPath, filters = []) => {
+    let ref = getCollection(name, userPath);
+
+    if (filters.length > 0) {
+        const whereConditions = filters.map((f) =>
+            where(f.field, f.op, f.value)
+        );
+        ref = query(ref, ...whereConditions);
+    }
+
+    const querySnapshot = await getDocs(ref);
     return querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 };
 
@@ -68,9 +80,15 @@ const useBarStore = create((set, get) => ({
     fetchMenuData: async (guestRequest = false) => {
         try {
             const { barmanEmail } = get();
+
+            const filtersByActiveForOrder = guestRequest
+                ? [{ field: 'activeForOrder', op: '==', value: true }]
+                : [];
+
             const menu = await loadCollection(
                 COLLECTIONS.menu,
-                getUserPath(guestRequest ? barmanEmail : '')
+                getUserPath(guestRequest ? barmanEmail : ''),
+                filtersByActiveForOrder
             );
             set({ menu, isMenuLoaded: true });
         } catch (e) {
