@@ -81,15 +81,19 @@ const useBarStore = create((set, get) => ({
         try {
             const { barmanEmail } = get();
 
-            const filtersByActiveForOrder = guestRequest
-                ? [{ field: 'activeForOrder', op: '==', value: true }]
-                : [];
+            // const filtersByActiveForOrder = guestRequest
+            //     ? [{ field: 'activeForOrder', op: '!=', value: false }]
+            //     : [];
 
-            const menu = await loadCollection(
+            let menu = await loadCollection(
                 COLLECTIONS.menu,
-                getUserPath(guestRequest ? barmanEmail : ''),
-                filtersByActiveForOrder
+                getUserPath(guestRequest ? barmanEmail : '')
+                // [filtersByActiveForOrder]
             );
+            if (guestRequest) {
+                menu = menu.filter((i) => i.activeForOrder !== false);
+            }
+
             set({ menu, isMenuLoaded: true });
         } catch (e) {
             console.error('Failed to fetch menu:', e);
@@ -191,6 +195,13 @@ const useBarStore = create((set, get) => ({
             guestUsername: '',
             barmanEmail: '',
         });
+    },
+
+    clearMenu: () => {
+        set(() => ({
+            menu: [],
+            isMenuLoaded: false,
+        }));
     },
 
     updateMenuItem: async (id, newData) => {
