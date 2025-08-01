@@ -99,6 +99,7 @@ const useBarStore = create((set, get) => ({
     fetchOrdersData: async (guestRequest = false) => {
         try {
             const { barmanEmail } = get();
+
             const orders = await loadCollection(
                 COLLECTIONS.orders,
                 getUserPath(guestRequest ? barmanEmail : '')
@@ -295,6 +296,23 @@ const useBarStore = create((set, get) => ({
         );
         set((state) => ({
             orders: state.orders.filter((item) => item.id !== id),
+        }));
+    },
+
+    archieveOrderItem: async (id, value) => {
+        await updateDoc(
+            doc(
+                getCollection(COLLECTIONS.orders, getUserPath('')),
+                id.toString()
+            ),
+            {
+                archieved: value,
+            }
+        );
+        set((state) => ({
+            orders: state.orders.map((item) =>
+                item.id === id ? { ...item, archieved: value } : item
+            ),
         }));
     },
 
