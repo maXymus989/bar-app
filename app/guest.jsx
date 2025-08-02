@@ -33,16 +33,6 @@ const Guest = () => {
         }
     }, [isMenuLoaded]);
 
-    useFocusEffect(
-        useCallback(() => {
-            console.log('Enter into guest');
-            return () => {
-                console.log('Exit from guest');
-                clearMenu();
-            };
-        }, [])
-    );
-
     return (
         <SafeAreaView
             style={[

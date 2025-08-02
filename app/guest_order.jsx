@@ -29,6 +29,7 @@ const GuestOrder = () => {
 
     const [confirmationText, setConfirmationText] = useState('');
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showSuccessfullDialog, setShowSuccessfullDialog] = useState(false);
 
     const {
         menu,
@@ -49,9 +50,9 @@ const GuestOrder = () => {
         );
     };
 
-    const onAddOrder = () => {
+    const onAddOrder = async () => {
         const now = new Date();
-        addOrder({
+        await addOrder({
             id: Date.now(),
             orderName: menu[index].name,
             date: now.toISOString().split('T')[0],
@@ -59,6 +60,8 @@ const GuestOrder = () => {
             price: textPrice,
             clientName: guestUsername,
         });
+
+        setShowSuccessfullDialog(true);
     };
 
     useEffect(() => {
@@ -291,6 +294,14 @@ const GuestOrder = () => {
                             trueOptionText={'Так'}
                             falseOptionText={'Ні'}
                             callback={onAddOrder}
+                        />
+                    )}
+
+                    {showSuccessfullDialog && (
+                        <ConfirmDialog
+                            visible={showSuccessfullDialog}
+                            setVisible={setShowSuccessfullDialog}
+                            confirmationText={'Замовлення успішно прийняте.'}
                         />
                     )}
                 </>

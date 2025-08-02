@@ -1,4 +1,10 @@
-import { useState, useContext, useEffect, useCallback } from 'react';
+import {
+    useState,
+    useContext,
+    useEffect,
+    useCallback,
+    useLayoutEffect,
+} from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,8 +29,14 @@ const GuestNamePage = () => {
 
     const dividerWidth = 20;
 
-    const { setGuest, rooms, areRoomsLoaded, fetchRooms, clearMenu } =
-        useBarStore();
+    const {
+        setGuest,
+        rooms,
+        areRoomsLoaded,
+        fetchRooms,
+        clearMenu,
+        guestSessionActive,
+    } = useBarStore();
 
     const printAlert = (text) => {
         setAlertText(text);
@@ -44,12 +56,14 @@ const GuestNamePage = () => {
         fetchRooms();
     }, [!areRoomsLoaded]);
 
+    useLayoutEffect(() => {
+        if (guestSessionActive) {
+            router.push('/');
+        }
+    }, []);
     useFocusEffect(
         useCallback(() => {
-            console.log('Enter into guest_name_page');
-            return () => {
-                console.log('Екран втратив фокус guent_name_Page');
-            };
+            clearMenu();
         }, [])
     );
 

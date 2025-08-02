@@ -68,13 +68,25 @@ const useBarStore = create((set, get) => ({
 
     guestUsername: '',
     barmanEmail: '',
+    guestSessionActive: false,
+    barmanSessionActive: false,
 
     setGuest: (guestUsername, barmanUsername) => {
         console.log(barmanUsername);
         set({
             guestUsername,
+            guestSessionActive: true,
             barmanEmail: barmanUsername + '@barapp.com',
         });
+    },
+
+    setGuestSession: (sessionActive) => {
+        set({ guestSessionActive: sessionActive });
+    },
+
+    clearGuest: () => {
+        setGuest('', '');
+        setGuestSession(false);
     },
 
     fetchMenuData: async (guestRequest = false) => {
