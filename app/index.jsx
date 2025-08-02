@@ -1,11 +1,11 @@
-import { createContext, useCallback } from 'react';
+import { createContext, useCallback, useEffect, useLayoutEffect } from 'react';
 import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { Button } from '@rneui/base';
 import { useFonts } from 'expo-font';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import 'expo-router/entry';
 import useBarStore from '../state';
+import useSessionStore from '../state/sessionStore';
 
 const ColorPalette = require('../assets/color_palette.json');
 const ColorThemeContext = createContext(ColorPalette);
@@ -18,13 +18,20 @@ const Index = () => {
     });
 
     const router = useRouter();
-    const { clearAll, guestSessionActive } = useBarStore();
+    const { setGuest, clearMenu } = useBarStore();
 
-    // useFocusEffect(
-    //   useCallback(() => {
-    //     clearAll();
-    //   }, [])
-    // );
+    const { guestSessionActive, guestUsername, barmanEmail } =
+        useSessionStore();
+
+    useEffect(() => {
+        setGuest(guestUsername, barmanEmail);
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            clearMenu();
+        }, [])
+    );
 
     if (!loaded) {
         return (

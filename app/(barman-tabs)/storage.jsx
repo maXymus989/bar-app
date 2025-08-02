@@ -6,11 +6,14 @@ import {
     ActivityIndicator,
     RefreshControl,
 } from 'react-native';
-import { FAB } from '@rneui/base';
+import { Button, FAB } from '@rneui/base';
 import { ColorThemeContext } from '../index';
 import StorageItem from '../../Components/StorageItem';
 import StorageItemDialog from '../../Components/StorageItemDialog';
 import useBarStore from '../../state';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import useSessionStore from '../../state/sessionStore';
+import { router } from 'expo-router';
 
 const Storage = () => {
     const ColorPalette = useContext(ColorThemeContext);
@@ -18,6 +21,8 @@ const Storage = () => {
     const [updateItemDialogVisible, setUpdateItemDialogVisible] =
         useState(false);
     const [currentItemId, setCurrentItemId] = useState('');
+
+    const { signOutBarman } = useSessionStore();
 
     const {
         storage,
@@ -111,6 +116,28 @@ const Storage = () => {
                     onRemoveStorageItem={removeStorageItem}
                 />
             )}
+            <Button
+                title={
+                    <MaterialCommunityIcons
+                        name="exit-run"
+                        size={18}
+                        color="black"
+                    />
+                }
+                buttonStyle={{
+                    backgroundColor: ColorPalette.main.notButtons,
+                }}
+                titleStyle={{
+                    color: ColorPalette.main.darkText,
+                    fontFamily: 'KyivTypeSerif-Heavy',
+                    fontSize: 14,
+                }}
+                containerStyle={styles.exitButton}
+                onPress={() => {
+                    signOutBarman();
+                    router.replace('/');
+                }}
+            />
         </View>
     );
 };
@@ -125,5 +152,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 20,
         right: 20,
+    },
+    exitButton: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        color: 'white',
     },
 });

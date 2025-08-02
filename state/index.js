@@ -68,25 +68,13 @@ const useBarStore = create((set, get) => ({
 
     guestUsername: '',
     barmanEmail: '',
-    guestSessionActive: false,
     barmanSessionActive: false,
 
     setGuest: (guestUsername, barmanUsername) => {
-        console.log(barmanUsername);
         set({
             guestUsername,
-            guestSessionActive: true,
             barmanEmail: barmanUsername + '@barapp.com',
         });
-    },
-
-    setGuestSession: (sessionActive) => {
-        set({ guestSessionActive: sessionActive });
-    },
-
-    clearGuest: () => {
-        setGuest('', '');
-        setGuestSession(false);
     },
 
     fetchMenuData: async (guestRequest = false) => {
@@ -96,7 +84,6 @@ const useBarStore = create((set, get) => ({
             // const filtersByActiveForOrder = guestRequest
             //     ? [{ field: 'activeForOrder', op: '!=', value: false }]
             //     : [];
-
             let menu = await loadCollection(
                 COLLECTIONS.menu,
                 getUserPath(guestRequest ? barmanEmail : '')

@@ -13,6 +13,7 @@ import { Input, Divider, Button } from '@rneui/base';
 import { ColorThemeContext } from './index';
 import AlertDialog from '../Components/AlertDialog';
 import useBarStore from '../state';
+import useSessionStore from '../state/sessionStore';
 
 const GuestNamePage = () => {
     const [username, setUsername] = useState('');
@@ -29,19 +30,20 @@ const GuestNamePage = () => {
 
     const dividerWidth = 20;
 
-    const {
-        setGuest,
-        rooms,
-        areRoomsLoaded,
-        fetchRooms,
-        clearMenu,
-        guestSessionActive,
-    } = useBarStore();
+    const { setGuest, rooms, areRoomsLoaded, fetchRooms, clearMenu } =
+        useBarStore();
 
     const printAlert = (text) => {
         setAlertText(text);
         setShowAlert(true);
     };
+
+    const {
+        guestSessionActive,
+        setGuestSession,
+    } = useSessionStore();
+
+
 
     useEffect(() => {
         setRoomNames(
@@ -151,6 +153,7 @@ const GuestNamePage = () => {
                 onPress={() => {
                     if (isValidName(username) && selectedRoomName) {
                         setGuest(username, selectedRoomName);
+                        setGuestSession(username, selectedRoomName);
                         router.push('/guest');
                     } else {
                         printAlert('Неправильний формат введення імені!');

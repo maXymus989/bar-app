@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useLayoutEffect } from 'react';
 import { StyleSheet, View, Text, ActivityIndicator } from 'react-native';
 import { Image } from 'expo-image';
 import { router, useFocusEffect } from 'expo-router';
@@ -7,17 +7,27 @@ import { Button } from '@rneui/base';
 import { ColorThemeContext } from './index';
 import useBoundedIndex from '../hooks/useBoundedIndex';
 import useBarStore from '../state';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import useSessionStore from '../state/sessionStore';
 
 const Guest = () => {
     const ColorPalette = useContext(ColorThemeContext);
     const textColor = { color: ColorPalette.main.darkText };
-    const { menu, isMenuLoaded, fetchMenuData, clearMenu } = useBarStore();
+    const { menu, setGuest, isMenuLoaded, fetchMenuData } = useBarStore();
+
+    const { guestSessionActive, clearGuest } = useSessionStore();
 
     const { index, next, prev, setMax } = useBoundedIndex(0, menu.length - 1);
 
     useEffect(() => {
         setMax(menu.length - 1);
     }, [menu]);
+
+    useLayoutEffect(() => {
+        if (!guestSessionActive) {
+            router.replace('/');
+        }
+    }, []);
 
     useEffect(() => {
         if (!isMenuLoaded) {
@@ -30,6 +40,7 @@ const Guest = () => {
             };
 
             fetchData();
+            console.log('Fetching');
         }
     }, [isMenuLoaded]);
 
@@ -134,6 +145,28 @@ const Guest = () => {
                     />
                 </>
             )}
+            <Button
+                title={
+                    <MaterialCommunityIcons
+                        name="exit-run"
+                        size={24}
+                        color="black"
+                    />
+                }
+                buttonStyle={{
+                    backgroundColor: ColorPalette.main.notButtons,
+                }}
+                titleStyle={{
+                    color: ColorPalette.main.darkText,
+                    fontFamily: 'KyivTypeSerif-Heavy',
+                    fontSize: 18,
+                }}
+                containerStyle={styles.exitButton}
+                onPress={async () => {
+                    await clearGuest();
+                    router.push('/guest_name_page');
+                }}
+            />
         </SafeAreaView>
     );
 };
@@ -185,5 +218,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         marginTop: '30%',
+    },
+    exitButton: {
+        position: 'absolute',
+        top: 60,
+        left: 30,
+        color: 'white',
     },
 });
