@@ -6,10 +6,10 @@ import { Audio } from "expo-av";
 SplashScreen.preventAutoHideAsync();
 
 const musicTracks = [
-  require("../assets/music/jazz-1.mp3"),
-  require("../assets/music/jazz-2.mp3"),
-  require("../assets/music/jazz-3.mp3"),
-  require("../assets/music/jazz-4.mp3"),
+  // require("../assets/music/jazz-1.mp3"),
+  // require("../assets/music/jazz-2.mp3"),
+  // require("../assets/music/jazz-3.mp3"),
+  // require("../assets/music/jazz-4.mp3"),
 ];
 
 export default function RootLayout() {
@@ -53,7 +53,7 @@ export default function RootLayout() {
       await sound.playAsync();
     };
 
-    playRandomTrack();
+    // playRandomTrack();
 
     return () => {
       isMounted = false;
